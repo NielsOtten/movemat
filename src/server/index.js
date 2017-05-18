@@ -9,10 +9,15 @@ import createMemoryHistory from 'react-router/lib/createMemoryHistory';
 import match from 'react-router/lib/match';
 import template from './template';
 import routes from '../routes';
+import mongoose from 'mongoose';
 
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = process.env.PORT || parseInt(KYT.SERVER_PORT, 10);
 const app = express();
+
+const mongoURL = process.env.MONGODB_URI || 'mongodb://localhost/steps';
+mongoose.Promise = Promise;
+mongoose.connect(mongoURL);
 
 // Remove annoying Express header addition.
 app.disable('x-powered-by');
