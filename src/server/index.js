@@ -23,6 +23,55 @@ app.use(compression());
 // Setup the public directory so that we can server static assets.
 app.use(express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
 
+// Sprint 1 return json with images.
+app.get('/group/oma1/photos', (req, res) => {
+  const url = `${req.protocol}://${req.get('host')}`;
+
+  const json = {
+    'updated_photos': [
+      {
+        '_id': '1',
+        'name': 'photo1',
+        'url': url + '/images/fam-jan.jpg'
+      },
+      {
+        '_id': '2',
+        'name': 'photo2',
+        'url': url + '/images/fam-jan-2.jpg'
+      },
+      {
+        '_id': '3',
+        'name': 'photo3',
+        'url': url + '/images/fam-xander.jpg'
+      }
+    ],
+    'photos': [
+      {
+        '_id': '4',
+        'name': 'photo4',
+        'url': url + '/images/oma.JPG'
+      },
+      {
+        '_id': '5',
+        'name': 'photo5',
+        'url': url + '/images/xander.JPG'
+      },
+      {
+        '_id': '6',
+        'name': 'photo6',
+        'url': url + '/images/xander-baby.jpg'
+      },
+      {
+        '_id': '7',
+        'name': 'photo7',
+        'url': url + '/images/xander-young.jpg'
+      }
+    ]
+  };
+
+  res.json(json);
+});
+
 // Setup server side routing.
 app.get('*', (request, response) => {
   const history = createMemoryHistory(request.originalUrl);
