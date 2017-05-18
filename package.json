@@ -8,14 +8,17 @@
   "dependencies": {
     "babel-preset-kyt-react": "0.2.0",
     "bcrypt": "^1.0.2",
+    "body-parser": "^1.17.2",
     "compression": "1.6.2",
     "express": "4.14.0",
     "flow-bin": "^0.46.0",
     "kyt": "^0.5.3",
     "mongoose": "^4.9.10",
+    "mongoose-unique-validator": "^1.0.5",
     "react": "15.3.0",
     "react-dom": "15.3.0",
-    "react-router": "2.6.1"
+    "react-router": "2.6.1",
+    "validator": "^7.0.0"
   },
   "devDependencies": {
     "babel-plugin-transform-flow-strip-types": "^6.22.0",

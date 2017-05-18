@@ -10,6 +10,10 @@ import match from 'react-router/lib/match';
 import template from './template';
 import routes from '../routes';
 import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+
+// Mongoose models
+import User from '../models/User';
 
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = process.env.PORT || parseInt(KYT.SERVER_PORT, 10);
@@ -24,6 +28,12 @@ app.disable('x-powered-by');
 
 // Compress (gzip) assets in production.
 app.use(compression());
+
+// Add bodyParser for json.
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
 
 // Setup the public directory so that we can server static assets.
 app.use(express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
@@ -98,6 +108,25 @@ app.get('*', (request, response) => {
       response.status(404).send('Not found');
     }
   });
+});
+
+// Createing a user.
+app.post('/newUser', (req, res) => {
+  const user = new User(req.body);
+
+  user.save()
+    .then(() => {
+      res.json({
+        'success': true,
+        'errors': []
+      });
+    })
+    .catch(err => {
+      res.json({
+        'success': false,
+        'errors': Object.values(err.errors)
+      });
+    });
 });
 
 app.listen(port, () => {
