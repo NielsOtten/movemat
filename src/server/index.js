@@ -10,10 +10,8 @@ import match from 'react-router/lib/match';
 import template from './template';
 import routes from '../routes';
 
-
-
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
-const port = parseInt(KYT.SERVER_PORT, 10);
+const port = process.env.PORT || parseInt(KYT.SERVER_PORT, 10);
 const app = express();
 
 // Remove annoying Express header addition.
