@@ -11,8 +11,8 @@ import template from './template';
 import routes from '../routes';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
-import passport from 'passport';
-import expressSession from 'express-session';
+// import passport from 'passport';
+// import expressSession from 'express-session';
 
 // Mongoose models
 import User from '../models/User';
@@ -37,10 +37,10 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-// Setup passport + session
-app.use(expressSession({secret: 'StepsIsMooieDingen'}));
-app.use(passport.initialize());
-app.use(passport.session());
+// // Setup passport + session
+// app.use(expressSession({secret: 'StepsIsMooieDingen'}));
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // Setup the public directory so that we can server static assets.
 app.use(express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
