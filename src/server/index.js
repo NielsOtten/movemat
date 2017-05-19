@@ -11,6 +11,8 @@ import template from './template';
 import routes from '../routes';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import passport from 'passport';
+import expressSession from 'express-session';
 
 // Mongoose models
 import User from '../models/User';
@@ -34,6 +36,11 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
+
+// Setup passport + session
+app.use(expressSession({secret: 'StepsIsMooieDingen'}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Setup the public directory so that we can server static assets.
 app.use(express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
@@ -74,12 +81,12 @@ app.get('/group/oma1/photos', (req, res) => {
       {
         '_id': '6',
         'name': 'photo6',
-        'url': url + '/images/xander-baby.jpg'
+        'url': url + '/images/xander-baby.JPG'
       },
       {
         '_id': '7',
         'name': 'photo7',
-        'url': url + '/images/xander-young.jpg'
+        'url': url + '/images/xander-young.JPG'
       }
     ]
   };
