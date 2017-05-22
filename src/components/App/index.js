@@ -14,6 +14,12 @@ function App({ children }) {
         <li className={styles.navItem}>
           <Link className={styles.link} to="/tools">Tools</Link>
         </li>
+        <li className={styles.navItem}>
+          <Link className={styles.link} to="/login">login</Link>
+        </li>
+        <li className={styles.navItem}>
+          <Link className={styles.link} to="/signup">signup</Link>
+        </li>
       </ul>
       <div className={styles.content}>
         {children}
