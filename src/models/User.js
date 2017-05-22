@@ -63,11 +63,8 @@ Schema.pre('save', function(next) {
 });
 
 // Compare the passwords of the user
-Schema.methods.comparePassword = (password, cb) => {
-  bcrypt.compare(password, this.password, (err, isMatch) => {
-    if (err) return cb(err);
-    cb(null, isMatch);
-  });
+Schema.methods.comparePassword = function (password) {
+  return bcrypt.compare(password, this.password)
 };
 
 Schema.plugin(uniqueValidator);
