@@ -34,7 +34,6 @@ class Auth {
           return done(null, false);
         if (!user.comparePassword(password))
           return done(null, false);
-
         return done(null, user);
       })
       .catch(err => {
@@ -51,7 +50,6 @@ class Auth {
       })
       .then(() => {
         const user = new User(req.body);
-
         return user.save();
       })
       .then(user => {
