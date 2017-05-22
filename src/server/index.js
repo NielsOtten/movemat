@@ -15,9 +15,6 @@ import passport from 'passport';
 import expressSession from 'express-session';
 import auth from './config/passport';
 
-// Mongoose models
-import User from '../models/User';
-
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = process.env.PORT || parseInt(KYT.SERVER_PORT, 10);
 const app = express();
