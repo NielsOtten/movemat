@@ -3,9 +3,10 @@ class GroupApi {
     this.id = id;
   }
 
-  hasAccess() {
+  addUser() {
     fetch(`/api/group/${this.id}`, {
       credentials: 'same-origin',
+      method: 'POST',
     })
       .then(res => res.json())
       .then((data) => {

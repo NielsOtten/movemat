@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import styles from './styles.scss';
 import GroupApi from '../../api';
 
 /**
@@ -8,18 +7,21 @@ import GroupApi from '../../api';
 class Group extends Component {
   constructor(props) {
     super(props);
-    console.log(props.params.id);
     this.GroupAPI = new GroupApi(props.params.id);
+    this.onSumbitHandler = this.onSumbitHandler.bind(this);
   }
 
-  componentDidMount() {
-    console.log(this.GroupAPI.hasAccess());
+  onSumbitHandler(e) {
+    e.preventDefault();
+    this.GroupAPI.addUser();
   }
 
   render() {
     return (
       <div>
-        test
+        <form onSubmit={this.onSumbitHandler}>
+          <input type='submit' />
+        </form>
       </div>
     );
   }

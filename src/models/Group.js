@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import uniqueValidator from 'mongoose-unique-validator';
+import { isEmail } from 'validator';
 import errorMessages from '../constants/errorMessages';
 import { generateRandomString } from '../utils';
 
@@ -8,8 +10,21 @@ import { generateRandomString } from '../utils';
  */
 const Schema = new mongoose.Schema({
   users: [{
-    type: String,
+    type: mongoose.Schema.ObjectId,
     ref: 'User',
+    unique: errorMessages.UNIQUE_ERROR,
+  }],
+  allowedEmails: [{
+    type: String,
+    trim: true,
+    lowercase: true,
+    required: `E-mailadres ${errorMessages.REQUIRED_ERROR}.`,
+    validate: {
+      isAsync: true,
+      validator: isEmail,
+      message: `${errorMessages.VALIDATE_ERROR} e-mailadres.`,
+    },
+    unique: errorMessages.UNIQUE_ERROR,
   }],
   name: {
     type: String,
@@ -17,7 +32,6 @@ const Schema = new mongoose.Schema({
   },
   token: {
     type: String,
-    unique: true,
     default: () => generateRandomString(30),
   },
   timestamp: {
@@ -26,21 +40,30 @@ const Schema = new mongoose.Schema({
   },
 });
 
-Schema.methods.getToken = function getToken(givenUser) {
-  return new Promise((resolve, reject) => {
-    this.hasAccess(givenUser)
-      .then(() => {
-        resolve(this.token);
-      });
-    reject();
-  });
-};
-
 Schema.methods.hasUserAccess = function hasUserAccess(givenUser) {
   return new Promise((resolve, reject) => {
     if(this.users.filter(user => user === givenUser).length > 0) resolve();
     reject();
   });
 };
+
+Schema.methods.addUser = function addUser(user) {
+  return new Promise((resolve, reject) => {
+    if(this.allowedEmails.filter(email => user.email === email).length > 0) {
+      this.hasUserAccess(user)
+        .then(() => {
+          reject('user is already registerd.');
+        })
+        .catch(() => {
+// eslint-disable-next-line no-underscore-dangle
+          this.users.addToSet(user._id);
+          this.save();
+          resolve(this);
+        });
+    }
+  });
+};
+
+Schema.plugin(uniqueValidator);
 
 export default mongoose.model('Group', Schema);

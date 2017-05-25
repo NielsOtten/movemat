@@ -96,8 +96,21 @@ app.get('/group/oma1/photos', (req, res) => {
   res.json(json);
 });
 
-app.get('/api/group/:id', (req, res) => {
+app.post('/api/group/:id', (req, res) => {
+  const id = req.params.id;
+  const user = req.user;
 
+  Group.findOne({ _id: id })
+    .then((group) => {
+      return group.addUser(user);
+    })
+    .then((newGroup) => {
+      res.json(newGroup);
+      res.end();
+    })
+    .catch(() => {
+      console.log('nope, not going to work.');
+    });
 });
 
 // Setup server side routing.
@@ -117,7 +130,7 @@ app.get('*', (req, res) => {
 });
 
 app.post('/login', passport.authenticate('local-login', {
-  successRedirect: '/familie/2',
+  successRedirect: '/familie/59274d8aba0dfc1c58871182',
   failureRedirect: '/login',
   failureFlash: true,
 }));
