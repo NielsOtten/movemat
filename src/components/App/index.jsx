@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MenuComponent from './Menu';
 import styles from './styles.scss';
-import PassportErrorsStore from '../../client/PassportErrorsStore';
+import PassportErrorsStore from '../../client/stores/PassportErrorsStore';
 
 class App extends Component {
   static getErrors(errors) {

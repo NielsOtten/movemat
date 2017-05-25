@@ -7,7 +7,6 @@ import App from '../components/App';
 // Webpack 2 supports ES2015 `import()` by auto-
 // chunking assets. Check out the following for more:
 // https://webpack.js.org/guides/migrating/#code-splitting-with-es2015
-
 const importHome = (nextState, cb) => {
   import('../components/Home')
     .then(module => cb(null, module.default))
@@ -26,6 +25,12 @@ const importSignUp = (nextState, cb) => {
     .catch((e) => { throw e; });
 };
 
+const importGroup = (nextState, cb) => {
+  import('../components/Group')
+    .then(module => cb(null, module.default))
+    .catch((e) => { throw e; });
+};
+
 // We use `getComponent` to dynamically load routes.
 // https://github.com/reactjs/react-router/blob/master/docs/guides/DynamicRouting.md
 const routes = (
@@ -33,6 +38,7 @@ const routes = (
     <IndexRoute getComponent={importHome} />
     <Route path='login' getComponent={importLogin} />
     <Route path='signup' getComponent={importSignUp} />
+    <Route path='familie/:id' getComponent={importGroup} />
   </Route>
 );
 
@@ -43,6 +49,7 @@ if(module.hot) {
   require('../components/Home');    // eslint-disable-line global-require
   require('../components/Login');   // eslint-disable-line global-require
   require('../components/Signup');   // eslint-disable-line global-require
+  require('../components/Group');   // eslint-disable-line global-require
 }
 
 export default routes;

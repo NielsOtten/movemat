@@ -1,8 +1,4 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
-
-// Salt work factor for BCrypt
-const SALT_WORK_FACTOR = 10;
 
 /**
  * This model is for every steps. Everytime a new WIFI steps gets configured then you have to create a new steps.
@@ -18,13 +14,6 @@ const Schema = mongoose.Schema({
   _user: {
     type: String,
     ref: 'User',
-  },
-  token: {
-    type: String,
-    default: () => {
-      // Generate hash.
-      bcrypt.genSalt(SALT_WORK_FACTOR);
-    },
   },
   timestamp: {
     type: Date,

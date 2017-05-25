@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import PassportErrorsStore from '../../client/PassportErrorsStore';
+import PassportErrorsStore from '../../client/stores/PassportErrorsStore';
 import styles from './styles.scss';
 
 @observer

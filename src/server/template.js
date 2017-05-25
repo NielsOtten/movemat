@@ -22,7 +22,9 @@ export default vo => `
 
   <body>
     <div id="root"><div>${vo.root}</div></div>
-    <script>var __passportErrors = ${JSON.stringify(vo.errors)};</script>
+    <script>
+    var __passportErrors = ${JSON.stringify(vo.errors)};
+    </script>
     <script src="${vo.jsBundle}"></script>
   </body>
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import styles from './styles.scss';
-import PassportErrorsStore from '../../../client/PassportErrorsStore';
+import PassportErrorsStore from '../../../client/stores/PassportErrorsStore';
 
 class Menu extends Component {
   static onClickHandler() {

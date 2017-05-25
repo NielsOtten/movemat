@@ -9,6 +9,7 @@ import connectFlash from 'connect-flash';
 import path from 'path';
 import template from './template';
 import Auth from './config/passport';
+import Group from '../models/Group';
 
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = process.env.PORT || parseInt(KYT.SERVER_PORT, 10);
@@ -95,19 +96,28 @@ app.get('/group/oma1/photos', (req, res) => {
   res.json(json);
 });
 
+app.get('/api/group/:id', (req, res) => {
+
+});
+
 // Setup server side routing.
 app.get('*', (req, res) => {
+  const allowed = ['', '/', '/login', '/signup'].filter(allowedPath => req.url === allowedPath).length;
+  if(allowed <= 0 && !req.user) {
+    res.redirect('/login');
+    return res.end();
+  }
+
   const errors = req.flash('errors');
-  res.status(200).send(template({
+  return res.status(200).send(template({
     jsBundle: clientAssets.main.js,
     cssBundle: clientAssets.main.css,
     errors,
   }));
 });
 
-
 app.post('/login', passport.authenticate('local-login', {
-  successRedirect: '/tools',
+  successRedirect: '/familie/2',
   failureRedirect: '/login',
   failureFlash: true,
 }));
@@ -118,6 +128,13 @@ app.post('/signup', passport.authenticate('local-signup', {
   failureRedirect: '/signup',
   failureFlash: true,
 }));
+
+app.post('/api/group', (req, res) => {
+  const newGroup = new Group(req.body);
+  newGroup.save();
+
+  res.json(newGroup);
+});
 
 app.listen(port, () => {
   console.log(`✅  server started on port: ${port}`); // eslint-disable-line no-console
