@@ -14,12 +14,6 @@ const importHome = (nextState, cb) => {
     .catch((e) => { throw e; });
 };
 
-const importTools = (nextState, cb) => {
-  import('../components/Tools')
-    .then(module => cb(null, module.default))
-    .catch((e) => { throw e; });
-};
-
 const importLogin = (nextState, cb) => {
   import('../components/Login')
     .then(module => cb(null, module.default))
@@ -35,20 +29,18 @@ const importSignUp = (nextState, cb) => {
 // We use `getComponent` to dynamically load routes.
 // https://github.com/reactjs/react-router/blob/master/docs/guides/DynamicRouting.md
 const routes = (
-  <Route path="/" component={App}>
+  <Route path='/' component={App}>
     <IndexRoute getComponent={importHome} />
-    <Route path="tools" getComponent={importTools} />
-    <Route path="login" getComponent={importLogin} />
-    <Route path="signup" getComponent={importSignUp} />
+    <Route path='login' getComponent={importLogin} />
+    <Route path='signup' getComponent={importSignUp} />
   </Route>
 );
 
 // Unfortunately, HMR breaks when we dynamically resolve
 // routes so we need to require them here as a workaround.
 // https://github.com/gaearon/react-hot-loader/issues/288
-if (module.hot) {
+if(module.hot) {
   require('../components/Home');    // eslint-disable-line global-require
-  require('../components/Tools');   // eslint-disable-line global-require
   require('../components/Login');   // eslint-disable-line global-require
   require('../components/Signup');   // eslint-disable-line global-require
 }

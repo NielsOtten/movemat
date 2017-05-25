@@ -1,7 +1,8 @@
 
 import React from 'react';
-import { render } from 'react-dom';
+// eslint-disable-next-line
 import { AppContainer } from 'react-hot-loader';
+import { render } from 'react-dom';
 import Root from './Root';
 
 const root = document.querySelector('#root');
@@ -11,11 +12,11 @@ const mount = (RootComponent) => {
     <AppContainer>
       <RootComponent />
     </AppContainer>,
-    root
+    root,
   );
 };
 
-if (module.hot) {
+if(module.hot) {
   module.hot.accept('./Root', () => {
     // eslint-disable-next-line global-require,import/newline-after-import
     const RootComponent = require('./Root').default;

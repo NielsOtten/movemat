@@ -1,6 +1,7 @@
 import LocalStrategy from 'passport-local';
-import User from '../../models/User';
 import Passport from 'passport';
+import User from '../../models/User';
+import errorMessages from '../../constants/errorMessages';
 
 class Auth {
 
@@ -9,55 +10,52 @@ class Auth {
   }
 
   initialize() {
-    this.passport.serializeUser(this.serializeUser);
-    this.passport.deserializeUser(this.deserializeUser);
-    this.passport.use('local-login', new LocalStrategy(this.loginAuthenticate.bind(this)));
+    this.passport.serializeUser(Auth.serializeUser);
+    this.passport.deserializeUser(Auth.deserializeUser);
+    this.passport.use('local-login', new LocalStrategy({
+      passReqToCallback: true,
+    }, Auth.loginAuthenticate.bind(this)));
     this.passport.use('local-signup', new LocalStrategy({
-      passReqToCallback: true
-    },this.signupAuthenticate.bind(this)));
+      passReqToCallback: true,
+    }, Auth.signupAuthenticate.bind(this)));
   }
 
-  serializeUser(user, done) {
+  static serializeUser(user, done) {
     done(null, user.id);
   }
 
-  deserializeUser(id, done) {
-    User.findById(id, function(err, user) {
+  static deserializeUser(id, done) {
+    User.findById(id, (err, user) => {
       done(err, user);
     });
   }
 
-  loginAuthenticate(email, password, done) {
-    User.findOne({$or: [{'email': email}, {'username': email}]}).exec()
-      .then(user => {
-        if (!user)
-          return done(null, false);
-        if (!user.comparePassword(password))
-          return done(null, false);
+  static loginAuthenticate(req, email, password, done) {
+    User.findOne({ $or: [{ email }, { username: email }] }).exec()
+      .then((user) => {
+        if(!user) { return done(null, false); }
+        if(!user.comparePassword(password)) { return done(null, false); }
         return done(null, user);
       })
-      .catch(err => {
-        return done(err);
-      })
+      .catch(err => done(err));
   }
 
-  signupAuthenticate(req, email, password, done) {
-    User.findOne({$or: [{'email': email}, {'username': email}]}).exec()
-      .then(user => {
-        if (user)
-          return done(null, false);
+  static signupAuthenticate(req, email, password, done) {
+    User.findOne({ $or: [{ email }, { username: email }] }).exec()
+      .then((user) => {
+        if(user) { return done(null, false, req.flash('errors', errorMessages.SIGNUP_USER_ERROR)); }
         return true;
       })
       .then(() => {
         const user = new User(req.body);
         return user.save();
       })
-      .then(user => {
+      .then((user) => {
         done(null, user);
       })
-      .catch(err => {
-        done(err)
-      })
+      .catch((err) => {
+        done(null, false, req.flash('errors', err.errors));
+      });
   }
 }
 

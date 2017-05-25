@@ -8,16 +8,16 @@ import errorMessages from '../constants/errorMessages';
 const Schema = new mongoose.Schema({
   users: [{
     type: String,
-    ref: 'User'
+    ref: 'User',
   }],
   name: {
     type: String,
-    required: errorMessages.REQUIRED_ERROR
+    required: errorMessages.REQUIRED_ERROR,
   },
   timestamp: {
     type: Date,
     default: () => new Date(),
-  }
+  },
 });
 
 export default mongoose.model('Group', Schema);

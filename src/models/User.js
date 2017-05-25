@@ -22,50 +22,48 @@ const Schema = mongoose.Schema({
     validate: {
       isAsync: true,
       validator: isEmail,
-      message: `${errorMessages.VALIDATE_ERROR} e-mailadres.`
+      message: `${errorMessages.VALIDATE_ERROR} e-mailadres.`,
     },
-    unique: errorMessages.UNIQUE_ERROR
+    unique: errorMessages.UNIQUE_ERROR,
   },
   username: {
     type: String,
     required: `Gebruikersnaam ${errorMessages.REQUIRED_ERROR}.`,
-    unique: errorMessages.UNIQUE_ERROR
+    unique: errorMessages.UNIQUE_ERROR,
   },
   password: {
     type: String,
-    required: `Wachtwoord ${errorMessages.REQUIRED_ERROR}.`
+    required: `Wachtwoord ${errorMessages.REQUIRED_ERROR}.`,
   },
   timestamp: {
     type: Date,
     default: () => new Date(),
-  }
+  },
 });
 
 // No arrow function, because pre save can't handle it.
 // http://stackoverflow.com/questions/37365038/this-is-undefined-in-a-mongoose-pre-save-hook
-Schema.pre('save', function(next) {
-  console.log(this);
+Schema.pre('save', (next) => {
   const user = this;
 
   // Generate hash.
-  bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
-    if (err) return next(err);
+  bcrypt.genSalt(SALT_WORK_FACTOR, (saltErr, salt) => {
+    if(saltErr) return next(saltErr);
 
     // hash the password along with our new salt.
-    bcrypt.hash(user.password, salt, function(err, hash) {
-      if (err) return next(err);
+    bcrypt.hash(user.password, salt, (hashErr, hash) => {
+      if(hashErr) return next(hashErr);
 
       // override the cleartext password with the hashed one.
       user.password = hash;
-      next();
+      return next();
     });
-  })
+    return next();
+  });
 });
 
 // Compare the passwords of the user
-Schema.methods.comparePassword = function (password) {
-  return bcrypt.compare(password, this.password)
-};
+Schema.methods.comparePassword = password => bcrypt.compare(password, this.password);
 
 Schema.plugin(uniqueValidator);
 

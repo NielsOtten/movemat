@@ -5,8 +5,9 @@
 module.exports = {
   reactHotLoader: true,
   debug: false,
-  modifyWebpackConfig: (baseConfig, options) => {
+  modifyWebpackConfig: (baseConfig) => {
+    baseConfig.resolve.extensions.push('.jsx');
     // modify baseConfig based on the options
     return baseConfig;
-  }
+  },
 };
