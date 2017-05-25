@@ -2,6 +2,7 @@ import LocalStrategy from 'passport-local';
 import Passport from 'passport';
 import User from '../../models/User';
 import errorMessages from '../../constants/errorMessages';
+import { errorMongoosify } from '../../utils';
 
 class Auth {
 
@@ -33,8 +34,8 @@ class Auth {
   static loginAuthenticate(req, email, password, done) {
     User.findOne({ $or: [{ email }, { username: email }] }).exec()
       .then((user) => {
-        if(!user) { return done(null, false); }
-        if(!user.comparePassword(password)) { return done(null, false); }
+        if(!user) { return done(null, false, req.flash('errors', errorMongoosify(errorMessages.PASSWORD_NOT_VALID_ERROR))); }
+        if(!user.comparePassword(password)) { return done(null, false, req.flash('errors', errorMongoosify(errorMessages.PASSWORD_NOT_VALID_ERROR))); }
         return done(null, user);
       })
       .catch(err => done(err));
@@ -43,7 +44,7 @@ class Auth {
   static signupAuthenticate(req, email, password, done) {
     User.findOne({ $or: [{ email }, { username: email }] }).exec()
       .then((user) => {
-        if(user) { return done(null, false, req.flash('errors', errorMessages.SIGNUP_USER_ERROR)); }
+        if(user) { return done(null, false, req.flash('errors', errorMongoosify(errorMessages.SIGNUP_USER_ERROR))); }
         return true;
       })
       .then(() => {
