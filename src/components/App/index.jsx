@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Link from 'react-router/lib/Link';
+import MenuComponent from './Menu';
 import styles from './styles.scss';
 import PassportErrorsStore from '../../client/PassportErrorsStore';
 
@@ -24,17 +24,7 @@ class App extends Component {
     return (
       <div>
         <i className={styles.logo} />
-        <ul className={styles.nav}>
-          <li className={styles.navItem}>
-            <Link className={styles.link} to='/'>Home</Link>
-          </li>
-          <li className={styles.navItem}>
-            <Link className={styles.link} to='/login'>login</Link>
-          </li>
-          <li className={styles.navItem}>
-            <Link className={styles.link} to='/signup'>signup</Link>
-          </li>
-        </ul>
+        <MenuComponent />
         <div className={styles.content}>
           {this.renderChildren()}
         </div>
