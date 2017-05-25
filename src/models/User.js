@@ -43,27 +43,31 @@ const Schema = mongoose.Schema({
 
 // No arrow function, because pre save can't handle it.
 // http://stackoverflow.com/questions/37365038/this-is-undefined-in-a-mongoose-pre-save-hook
-Schema.pre('save', (next) => {
+// eslint-disable-next-line func-names
+Schema.pre('save', function (next) {
   const user = this;
 
   // Generate hash.
+// eslint-disable-next-line consistent-return
   bcrypt.genSalt(SALT_WORK_FACTOR, (saltErr, salt) => {
     if(saltErr) return next(saltErr);
 
     // hash the password along with our new salt.
+// eslint-disable-next-line consistent-return
     bcrypt.hash(user.password, salt, (hashErr, hash) => {
       if(hashErr) return next(hashErr);
 
       // override the cleartext password with the hashed one.
       user.password = hash;
-      return next();
+      next();
     });
-    return next();
   });
 });
 
 // Compare the passwords of the user
-Schema.methods.comparePassword = password => bcrypt.compare(password, this.password);
+Schema.methods.comparePassword = function comparePassword(password) {
+  return bcrypt.compare(password, this.password);
+};
 
 Schema.plugin(uniqueValidator);
 
