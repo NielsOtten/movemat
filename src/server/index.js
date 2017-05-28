@@ -176,14 +176,21 @@ app.get('/api/user/groups', (req, res) => {
     })
     .catch((err) => {
       res.json(err);
-    })
+    });
 });
 
 // Setup server side routing.
 app.get('*', (req, res) => {
-  const allowed = ['', '/', '/login', '/signup'].filter(allowedPath => req.url === allowedPath).length;
+  const messages = [];
+// eslint-disable-next-line no-useless-escape
+  const url = req.originalUrl.split('?').shift();
+  const allowed = ['', '/', '/login', '/signup'].filter((allowedPath) => {
+    return url === allowedPath;
+  }).length;
   if(allowed <= 0 && !req.user) {
-    res.redirect('/login');
+    messages.push('Je moet ingelogd zijn om deze pagina te bekijken.');
+    const redirectUri = req.url;
+    res.redirect(`/login?redirectUri=${redirectUri}&messages=${messages}`);
     return res.end();
   }
 

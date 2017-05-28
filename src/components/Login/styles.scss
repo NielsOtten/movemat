@@ -4,3 +4,14 @@
 input {
   width: 100%;
 }
+
+.errors {
+  color: #ffffff;
+  background-color: red;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+
+.messages {
+  color: black;
+}
