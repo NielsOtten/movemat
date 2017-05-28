@@ -169,10 +169,19 @@ app.post('/api/group/:id', (req, res) => {
     });
 });
 
+app.get('/api/user/groups', (req, res) => {
+  Group.getGroups(req.user)
+    .then((groups) => {
+      res.json(groups);
+    })
+    .catch((err) => {
+      res.json(err);
+    })
+});
+
 // Setup server side routing.
 app.get('*', (req, res) => {
   const allowed = ['', '/', '/login', '/signup'].filter(allowedPath => req.url === allowedPath).length;
-  console.log(req.url);
   if(allowed <= 0 && !req.user) {
     res.redirect('/login');
     return res.end();
@@ -187,7 +196,7 @@ app.get('*', (req, res) => {
 });
 
 app.post('/login', passport.authenticate('local-login', {
-  successRedirect: '/familie/59274d8aba0dfc1c58871182',
+  successRedirect: '/dashboard',
   failureRedirect: '/login',
   failureFlash: true,
 }));

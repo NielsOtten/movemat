@@ -27,6 +27,19 @@ class GroupApi {
       })
       .catch((err) => { console.log(err); });
   }
+
+  getGroups() {
+    return fetch('/api/user/groups', {
+      credentials: 'same-origin',
+      method: 'GET',
+    })
+      .then(res => res.json())
+      .then((data) => {
+        console.log(data);
+        return data;
+      })
+      .catch((err) => { console.log(err); });
+  }
 }
 
 export default GroupApi;

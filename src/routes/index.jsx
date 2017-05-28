@@ -31,6 +31,12 @@ const importGroup = (nextState, cb) => {
     .catch((e) => { throw e; });
 };
 
+const importDashboard = (nextState, cb) => {
+  import('../components/Dashboard')
+    .then(module => cb(null, module.default))
+    .catch((e) => { throw e; });
+};
+
 // We use `getComponent` to dynamically load routes.
 // https://github.com/reactjs/react-router/blob/master/docs/guides/DynamicRouting.md
 const routes = (
@@ -38,6 +44,7 @@ const routes = (
     <IndexRoute getComponent={importHome} />
     <Route path='login' getComponent={importLogin} />
     <Route path='signup' getComponent={importSignUp} />
+    <Route path='dashboard' getComponent={importDashboard} />
     <Route path='familie/:id' getComponent={importGroup} />
   </Route>
 );
@@ -50,6 +57,7 @@ if(module.hot) {
   require('../components/Login');   // eslint-disable-line global-require
   require('../components/Signup');   // eslint-disable-line global-require
   require('../components/Group');   // eslint-disable-line global-require
+  require('../components/Dashboard');   // eslint-disable-line global-require
 }
 
 export default routes;

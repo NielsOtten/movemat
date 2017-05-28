@@ -18,9 +18,9 @@ class Signup extends Component {
           {Signup.renderErrors()}
         </ul>
         <form method='POST' action='/signup'>
-          <input type='text' name='email' />
-          <input type='text' name='username' />
-          <input type='password' name='password' />
+          <input type='text' name='email' placeholder='Email' />
+          <input type='text' name='username' placeholder='Username' />
+          <input type='password' name='password' placeholder='Password' />
           <input type='submit' />
         </form>
       </div>

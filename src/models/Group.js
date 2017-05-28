@@ -54,6 +54,20 @@ Schema.statics.getGroup = function getGroup(user, id) {
   });
 };
 
+Schema.statics.getGroups = function getGroups(user) {
+  return new Promise((resolve, reject) => {
+// eslint-disable-next-line no-underscore-dangle
+    this.find({ users: [user._id] })
+      .then((groups) => {
+        resolve(groups);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+
 Schema.methods.hasUserAccess = function hasUserAccess(givenUser) {
   return new Promise((resolve, reject) => {
     if(this.users.filter(user => user === givenUser).length > 0) resolve();

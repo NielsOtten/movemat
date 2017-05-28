@@ -23,7 +23,6 @@ class App extends Component {
   render() {
     return (
       <div>
-        <i className={styles.logo} />
         <MenuComponent />
         <div className={styles.content}>
           {this.renderChildren()}

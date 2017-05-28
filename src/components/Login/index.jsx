@@ -17,8 +17,8 @@ class Login extends Component {
           {Login.renderErrors()}
         </ul>
         <form method='POST' action='/login'>
-          <input type='text' name='username' />
-          <input type='password' name='password' />
+          <input type='text' name='username' placeholder='Username' />
+          <input type='password' name='password' placeholder='Password' />
           <input type='submit' />
         </form>
       </div>
