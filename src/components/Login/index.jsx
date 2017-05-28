@@ -19,7 +19,6 @@ class Login extends Component {
   }
 
   componentWillMount() {
-    console.log(this.props);
     const messages = this.props.location.query.messages ? this.props.location.query.messages.split(',') : [];
     const redirectUri = this.props.location.query.redirectUri ? this.props.location.query.redirectUri : '';
     this.setState({ messages, redirectUri });
