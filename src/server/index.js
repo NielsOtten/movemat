@@ -10,6 +10,7 @@ import path from 'path';
 import template from './template';
 import Auth from './config/passport';
 import Group from '../models/Group';
+import Photo from '../models/Photo';
 
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = process.env.PORT || parseInt(KYT.SERVER_PORT, 10);
@@ -96,14 +97,69 @@ app.get('/group/oma1/photos', (req, res) => {
   res.json(json);
 });
 
-app.post('/api/group/:id', (req, res) => {
+/**
+ * Endpoint to get the token from a group.
+ * Need to verify if the user is logged in.
+ */
+app.get('/api/group/:id/token', (req, res) => {
   const id = req.params.id;
   const user = req.user;
 
-  Group.findOne({ _id: id })
+  Group.getGroup(user, id)
     .then((group) => {
-      return group.addUser(user);
+      res.json({ token: group.token });
+      res.end();
     })
+    .catch((err) => {
+      res.json(err);
+      res.end();
+    });
+});
+
+/**
+ * Endpoint to get all the updated photos from a group.
+ * Need a token to retrieve tokens.
+ */
+app.get('/api/group/:id/photos', (req, res) => {
+  const token = req.query.token;
+  const id = req.params.id;
+  let searchGroup = {};
+  let newPhotos = [];
+  let downloadedPhotos = [];
+
+  // Add this check for cast error on _id.
+  // if (id.match(/^[0-9a-fA-F]{24}$/)
+
+  Group.findOne({ _id: req.params.id, token })
+    .then(group => searchGroup = group)
+    .then(() => newPhotos = Photo.getNewPhotos(searchGroup))
+    .then(() => downloadedPhotos = Photo.getDownloadedPhotos(searchGroup))
+    .then(() => {
+      res.json({
+        updated_photos: newPhotos,
+        photos: downloadedPhotos,
+        group: searchGroup,
+      });
+      res.end();
+    })
+    .catch((err) => {
+      res.status(404);
+      res.json(err);
+      res.end();
+    });
+});
+
+/**
+ * Add user to a group.
+ * User's email needs to be in the allowed emails of the group.
+ */
+app.post('/api/group/:id', (req, res) => {
+  const id = req.params.id;
+  const user = req.user;
+  const email = req.query.email;
+
+  Group.findOne({ _id: id })
+    .then(group => group.addUser(user))
     .then((newGroup) => {
       res.json(newGroup);
       res.end();
@@ -116,6 +172,7 @@ app.post('/api/group/:id', (req, res) => {
 // Setup server side routing.
 app.get('*', (req, res) => {
   const allowed = ['', '/', '/login', '/signup'].filter(allowedPath => req.url === allowedPath).length;
+  console.log(req.url);
   if(allowed <= 0 && !req.user) {
     res.redirect('/login');
     return res.end();
@@ -142,6 +199,9 @@ app.post('/signup', passport.authenticate('local-signup', {
   failureFlash: true,
 }));
 
+/**
+ * Endpoint to create a group.
+ */
 app.post('/api/group', (req, res) => {
   const newGroup = new Group(req.body);
   newGroup.save();

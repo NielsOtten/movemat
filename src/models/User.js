@@ -69,6 +69,14 @@ Schema.methods.comparePassword = function comparePassword(password) {
   return bcrypt.compare(password, this.password);
 };
 
+Schema.methods.getUserByEmail = function getUserByEmail(email) {
+  return Promise((resolve, reject) => {
+    this.findOne({ email })
+      .then(user => resolve(user))
+      .catch(() => reject());
+  });
+}
+
 Schema.plugin(uniqueValidator);
 
 export default mongoose.model('User', Schema);

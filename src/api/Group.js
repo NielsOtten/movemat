@@ -14,7 +14,19 @@ class GroupApi {
       })
       .catch((err) => { console.log(err); });
   }
-  getToken() {}
+
+  getToken() {
+    return fetch(`/api/group/${this.id}/token`, {
+      credentials: 'same-origin',
+      method: 'GET',
+    })
+      .then(res => res.json())
+      .then((data) => {
+        console.log(data);
+        return data;
+      })
+      .catch((err) => { console.log(err); });
+  }
 }
 
 export default GroupApi;

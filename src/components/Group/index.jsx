@@ -9,11 +9,17 @@ class Group extends Component {
     super(props);
     this.GroupAPI = new GroupApi(props.params.id);
     this.onSumbitHandler = this.onSumbitHandler.bind(this);
+    this.getToken = this.getToken.bind(this);
   }
 
   onSumbitHandler(e) {
     e.preventDefault();
     this.GroupAPI.addUser();
+  }
+
+  getToken(e) {
+    e.preventDefault();
+    this.GroupAPI.getToken();
   }
 
   render() {
@@ -22,6 +28,7 @@ class Group extends Component {
         <form onSubmit={this.onSumbitHandler}>
           <input type='submit' />
         </form>
+        <button onClick={this.getToken}>GetToken</button>
       </div>
     );
   }
