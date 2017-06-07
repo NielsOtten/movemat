@@ -4,6 +4,7 @@ import { isEmail } from 'validator';
 import errorMessages from '../constants/errorMessages';
 import { generateRandomString } from '../utils';
 import User from './User';
+import Photo from './Photo';
 
 /**
  * This is a group of users which represent a familiy.
@@ -45,12 +46,8 @@ Schema.statics.getGroup = function getGroup(user, id) {
   return new Promise((resolve, reject) => {
 // eslint-disable-next-line no-underscore-dangle
     this.findOne({ _id: id, users: [user._id] })
-      .then((group) => {
-        resolve(group);
-      })
-      .catch((err) => {
-        reject(err);
-      });
+      .then(group => resolve(group))
+      .catch(err => reject(err));
   });
 };
 
@@ -58,15 +55,49 @@ Schema.statics.getGroups = function getGroups(user) {
   return new Promise((resolve, reject) => {
 // eslint-disable-next-line no-underscore-dangle
     this.find({ users: [user._id] })
-      .then((groups) => {
-        resolve(groups);
-      })
-      .catch((err) => {
-        reject(err);
-      });
+      .then(groups => resolve(groups))
+      .catch(err => reject(err));
   });
 };
 
+Schema.statics.getGroupWithToken = function getGroupWithToken(id, token) {
+  return new Promise((resolve, reject) => {
+    this.findOne({ _id: id, token })
+      .then(group => resolve(group))
+      .catch(err => reject(err));
+  });
+};
+
+Schema.statics.getUpdateQueue = function getUpdateQueue(id, token) {
+  let searchGroup = {};
+  let newPhotos = [];
+  let downloadedPhotos = [];
+
+  return new Promise((resolve, reject) => {
+    this.getGroupWithToken(id, token)
+      .then(group => searchGroup = group)
+      .then(() => Photo.getNewPhotos(searchGroup))
+      .then((photos) => {
+        newPhotos = photos;
+        return Photo.getDownloadedPhotos(searchGroup);
+      })
+      .then(loadedPhotos => downloadedPhotos = loadedPhotos)
+      .then(() => resolve({
+        updated_photos: newPhotos,
+        photos: downloadedPhotos,
+        group: searchGroup,
+      }))
+      .catch(err => reject(err));
+  });
+};
+
+Schema.statics.getToken = function getToken(user, id) {
+  return new Promise((resolve, reject) => {
+    this.getGroup(user, id)
+      .then(group => resolve(group.token))
+      .catch(err => reject(err));
+  });
+};
 
 Schema.methods.hasUserAccess = function hasUserAccess(givenUser) {
   return new Promise((resolve, reject) => {
@@ -86,9 +117,7 @@ Schema.methods.addUser = function addUser(user) {
   return new Promise((resolve, reject) => {
     if(this.allowedEmails.filter(email => user.email === email).length > 0) {
       this.hasUserAccess(user)
-        .then(() => {
-          reject({ message: errorMessages.USER_ALREADY_REGISTERED });
-        })
+        .then(() => reject({ message: errorMessages.USER_ALREADY_REGISTERED }))
         .catch(() => {
 // eslint-disable-next-line no-underscore-dangle
           this.users.addToSet(user._id);
@@ -117,16 +146,12 @@ Schema.methods.addUserByEmail = function addUserByEmail(userEmail) {
               this.save();
               resolve(this);
             })
-            .catch(() => {
-              reject();
-            });
+            .catch(() => reject());
         })
-        .catch(() => {
-          reject();
-        });
+        .catch(() => reject());
     }
   });
-}
+};
 
 Schema.plugin(uniqueValidator);
 

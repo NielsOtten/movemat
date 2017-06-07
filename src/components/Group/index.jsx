@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import GroupApi from '../../api';
+import PhotoUpload from './PhotoUpload';
 
 /**
  * This is the detail view of the group in which you can view all your photo's from that group.
@@ -29,6 +30,7 @@ class Group extends Component {
           <input type='submit' />
         </form>
         <button onClick={this.getToken}>GetToken</button>
+        <PhotoUpload groupApi={this.GroupAPI} />
       </div>
     );
   }

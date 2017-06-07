@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 
 import express from 'express';
 import compression from 'compression';
@@ -6,11 +7,16 @@ import passport from 'passport';
 import bodyParser from 'body-parser';
 import expressSession from 'express-session';
 import connectFlash from 'connect-flash';
+import multer from 'multer';
+import azure from 'azure-storage';
 import path from 'path';
 import template from './template';
 import Auth from './config/passport';
 import Group from '../models/Group';
 import Photo from '../models/Photo';
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = process.env.PORT || parseInt(KYT.SERVER_PORT, 10);
@@ -105,9 +111,9 @@ app.get('/api/group/:id/token', (req, res) => {
   const id = req.params.id;
   const user = req.user;
 
-  Group.getGroup(user, id)
-    .then((group) => {
-      res.json({ token: group.token });
+  Group.getToken(user, id)
+    .then((token) => {
+      res.json({ token });
       res.end();
     })
     .catch((err) => {
@@ -123,28 +129,75 @@ app.get('/api/group/:id/token', (req, res) => {
 app.get('/api/group/:id/photos', (req, res) => {
   const token = req.query.token;
   const id = req.params.id;
-  let searchGroup = {};
-  let newPhotos = [];
-  let downloadedPhotos = [];
 
   // Add this check for cast error on _id.
   // if (id.match(/^[0-9a-fA-F]{24}$/)
 
-  Group.findOne({ _id: req.params.id, token })
-    .then(group => searchGroup = group)
-    .then(() => newPhotos = Photo.getNewPhotos(searchGroup))
-    .then(() => downloadedPhotos = Photo.getDownloadedPhotos(searchGroup))
-    .then(() => {
-      res.json({
-        updated_photos: newPhotos,
-        photos: downloadedPhotos,
-        group: searchGroup,
-      });
+  Group.getUpdateQueue(id, token)
+    .then((json) => {
+      res.json(json);
       res.end();
     })
     .catch((err) => {
       res.status(404);
       res.json(err);
+      res.end();
+    });
+});
+
+app.get('/api/group/:id/photos/:photoId', (req, res) => {
+  const token = req.query.token;
+  const id = req.params.id;
+  const photoId = req.params.photoId;
+
+  Photo.downloadPhoto(id, photoId, token)
+    .then(photo => photo.getUrlFromAzure())
+    .then((url) => {
+      console.log(url);
+      res.redirect(url);
+      res.end();
+    })
+    .catch((err) => {
+      res.json(err);
+      res.end();
+    });
+});
+
+app.post('/api/group/:id/photos', upload.array('image'), (req, res) => {
+  const id = req.params.id;
+  const photos = req.body.newPhotos;
+  const user = req.user;
+  if(user === undefined) {
+    const messages = [];
+    messages.push('Je moet ingelogd zijn om deze pagina te bekijken.');
+    const redirectUri = req.url;
+    res.status(403);
+    res.json({
+      loggedIn: false,
+      redirectUri: `/login?redirectUri=${redirectUri}&messages=${messages}`,
+    });
+    return res.end();
+  }
+
+  Promise.all(req.files.map(file => new Promise((resolve, reject) => {
+    const newPhoto = new Photo({
+      name: file.originalname,
+      user: user._id,
+      group: id,
+      fileType: file.type,
+    });
+
+    return newPhoto.addToAzure(file)
+      .then(() => newPhoto.save())
+      .then((newestPhoto) => {
+        newestPhoto.path = `${newestPhoto.path}${newestPhoto._id.toString()}`;
+        return newestPhoto.save();
+      })
+      .then(finish => resolve(finish))
+      .catch(err => reject(err));
+  })))
+    .then((data) => {
+      res.json({ newPhotos: data });
       res.end();
     });
 });
@@ -156,7 +209,6 @@ app.get('/api/group/:id/photos', (req, res) => {
 app.post('/api/group/:id', (req, res) => {
   const id = req.params.id;
   const user = req.user;
-  const email = req.query.email;
 
   Group.findOne({ _id: id })
     .then(group => group.addUser(user))
@@ -184,9 +236,7 @@ app.get('*', (req, res) => {
   const messages = [];
 // eslint-disable-next-line no-useless-escape
   const url = req.originalUrl.split('?').shift();
-  const allowed = ['', '/', '/login', '/signup'].filter((allowedPath) => {
-    return url === allowedPath;
-  }).length;
+  const allowed = ['', '/', '/login', '/signup'].filter(allowedPath => url === allowedPath).length;
   if(allowed <= 0 && !req.user) {
     messages.push('Je moet ingelogd zijn om deze pagina te bekijken.');
     const redirectUri = req.url;

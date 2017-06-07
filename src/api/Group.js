@@ -1,3 +1,5 @@
+import blobUtil from 'blob-util';
+
 class GroupApi {
   constructor(id) {
     this.id = id;
@@ -34,10 +36,25 @@ class GroupApi {
       method: 'GET',
     })
       .then(res => res.json())
-      .then((data) => {
-        console.log(data);
-        return data;
-      })
+      .then(data => data)
+      .catch((err) => { console.log(err); });
+  }
+
+  postPhotos(photos) {
+    const newPhotos = { newPhotos: photos };
+    console.log(newPhotos);
+    return fetch(`/api/group/${this.id}/photos`, {
+      mode: 'cors',
+      credentials: 'same-origin',
+      headers: {
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify(newPhotos),
+    })
+      .then(res => res.json())
+      .then(data => data)
       .catch((err) => { console.log(err); });
   }
 }
