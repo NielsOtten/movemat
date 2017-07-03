@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
+import fetch from 'fetch-everywhere';
 import request from 'superagent';
 import GroupApi from '../../../api/Group';
 import Photo from './Photo';
@@ -16,15 +17,24 @@ class PhotoUpload extends Component {
 
   state = {
     uploadedPhotos: [],
+    newPhotos: [],
+  };
+
+  getPhotos = (e) => {
+
   };
 
   changeHandler(uploadedPhotos) {
-    const req = request.post('/api/group/59274d8aba0dfc1c58871182/photos');
+    const req = request.post(`/api/group/${this.props.groupId}/photos`);
     uploadedPhotos.forEach((file) => {
       req.attach('image', file);
     });
-    req.end((data) => {
-      console.log(data);
+    req.end((err, data) => {
+      if(err) {
+        console.log(err);
+      } else {
+        this.setState({ newPhotos: data.body.newPhotos });
+      }
     });
   }
 
@@ -41,9 +51,18 @@ class PhotoUpload extends Component {
           </Dropzone>
         </section>
         <section className={styles.photos}>
+          <h2>NEW PHOTOS</h2>
+          {this.state.newPhotos.map(photo => <Photo
+            key={photo.name + photo.lastModified}
+            preview={photo.path}
+            title={photo.name}
+          />)}
+        </section>
+        <section className={styles.photos}>
+          <h2>UPLOADED PHOTOS</h2>
           {this.state.uploadedPhotos.map(photo => <Photo
             key={photo.name + photo.lastModified}
-            preview={photo.preview}
+            preview={photo.path}
             title={photo.name}
           />)}
         </section>
@@ -54,6 +73,7 @@ class PhotoUpload extends Component {
 
 PhotoUpload.propTypes = {
   groupApi: PropTypes.instanceOf(GroupApi).isRequired,
+  groupId: PropTypes.string.isRequired,
 };
 
 export default PhotoUpload;

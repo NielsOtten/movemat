@@ -26,6 +26,10 @@ const mongoURL = process.env.MONGODB_URI || 'mongodb://localhost/steps';
 mongoose.Promise = Promise;
 mongoose.connect(mongoURL);
 
+process.env.AZURE_STORAGE_ACCOUNT = 'steps';
+process.env.AZURE_STORAGE_ACCESS_KEY = 'hzKCavlWIuANG7hkum0burz3yMH7/dB5Bu8XpKkG9br6fRyuJ4kQuGaHuEcEiVWjykpkDFrryFE37PGuq0mrZA==';
+process.env.AZURE_STORAGE_CONNECTION_STRING = 'DefaultEndpointsProtocol=https;AccountName=steps;AccountKey=hzKCavlWIuANG7hkum0burz3yMH7/dB5Bu8XpKkG9br6fRyuJ4kQuGaHuEcEiVWjykpkDFrryFE37PGuq0mrZA==;EndpointSuffix=core.windows.net';
+
 // Remove annoying Express header addition.
 app.disable('x-powered-by');
 
@@ -153,7 +157,6 @@ app.get('/api/group/:id/photos/:photoId', (req, res) => {
   Photo.downloadPhoto(id, photoId, token)
     .then(photo => photo.getUrlFromAzure())
     .then((url) => {
-      console.log(url);
       res.redirect(url);
       res.end();
     })
@@ -165,8 +168,8 @@ app.get('/api/group/:id/photos/:photoId', (req, res) => {
 
 app.post('/api/group/:id/photos', upload.array('image'), (req, res) => {
   const id = req.params.id;
-  const photos = req.body.newPhotos;
   const user = req.user;
+
   if(user === undefined) {
     const messages = [];
     messages.push('Je moet ingelogd zijn om deze pagina te bekijken.');
@@ -184,7 +187,7 @@ app.post('/api/group/:id/photos', upload.array('image'), (req, res) => {
       name: file.originalname,
       user: user._id,
       group: id,
-      fileType: file.type,
+      fileType: file.mimetype,
     });
 
     return newPhoto.addToAzure(file)
@@ -198,6 +201,10 @@ app.post('/api/group/:id/photos', upload.array('image'), (req, res) => {
   })))
     .then((data) => {
       res.json({ newPhotos: data });
+      res.end();
+    })
+    .catch((err) => {
+      res.json(err);
       res.end();
     });
 });

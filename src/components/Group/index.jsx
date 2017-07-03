@@ -30,7 +30,7 @@ class Group extends Component {
           <input type='submit' />
         </form>
         <button onClick={this.getToken}>GetToken</button>
-        <PhotoUpload groupApi={this.GroupAPI} />
+        <PhotoUpload groupApi={this.GroupAPI} groupId={this.props.params.id}/>
       </div>
     );
   }

@@ -61,14 +61,16 @@ Schema.methods.addToAzure = function addToAzure(file) {
 };
 
 Schema.methods.getUrlFromAzure = function getUrlFromAzure() {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const blobService = azure.createBlobService();
     const sasToken = blobService.generateSharedAccessSignature(this.group.toString(), this.blobName, { AccessPolicy: {
       Expiry: azure.date.minutesFromNow(60),
       Permissions: azure.BlobUtilities.SharedAccessPermissions.READ,
-    } });
+    } }, {
+      contentType: this.fileType,
+    });
     const url = blobService.getUrl(this.group.toString(), this.blobName, sasToken, 'https://steps.blob.core.windows.net');
-    resolve(url);
+    return resolve(url);
   });
 };
 
