@@ -152,7 +152,6 @@ app.get('/api/group/:id/updatedPhotos', (req, res) => {
 app.get('/api/group/:id/photos', (req, res) => {
   const id = req.params.id;
   const user = req.user;
-
   Group.getGroup(user, id)
     .then(group => {
       console.log(group);
@@ -243,7 +242,8 @@ app.post('/api/group/:id', (req, res) => {
       res.json(newGroup);
       res.end();
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       console.log('nope, not going to work.');
     });
 });
@@ -263,7 +263,7 @@ app.get('*', (req, res) => {
   const messages = [];
 // eslint-disable-next-line no-useless-escape
   const url = req.originalUrl.split('?').shift();
-  const allowed = ['', '/', '/login', '/signup'].filter(allowedPath => url === allowedPath).length;
+  const allowed = ['', '/', '/login', '/signup', '/admin'].filter(allowedPath => url === allowedPath).length;
   if(allowed <= 0 && !req.user) {
     messages.push('Je moet ingelogd zijn om deze pagina te bekijken.');
     const redirectUri = req.url;

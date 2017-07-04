@@ -3,6 +3,7 @@ import React from 'react';
 import Route from 'react-router/lib/Route';
 import IndexRoute from 'react-router/lib/IndexRoute';
 import App from '../components/App';
+import Admin from '../components/Admin';
 
 // Webpack 2 supports ES2015 `import()` by auto-
 // chunking assets. Check out the following for more:
@@ -37,15 +38,24 @@ const importDashboard = (nextState, cb) => {
     .catch((e) => { throw e; });
 };
 
+const importAdmin = (nextState, cb) => {
+  import('../components/Admin')
+    .then(module => cb(null, module.default))
+    .catch((e) => { throw e; });
+};
+
 // We use `getComponent` to dynamically load routes.
 // https://github.com/reactjs/react-router/blob/master/docs/guides/DynamicRouting.md
 const routes = (
-  <Route path='/' component={App}>
-    <IndexRoute getComponent={importHome} />
-    <Route path='login' getComponent={importLogin} />
-    <Route path='signup' getComponent={importSignUp} />
-    <Route path='dashboard' getComponent={importDashboard} />
-    <Route path='familie/:id' getComponent={importGroup} />
+  <Route>
+    <Route path='/' component={App}>
+      <IndexRoute getComponent={importHome} />
+      <Route path='login' getComponent={importLogin} />
+      <Route path='signup' getComponent={importSignUp} />
+      <Route path='dashboard' getComponent={importDashboard} />
+      <Route path='familie/:id' getComponent={importGroup} />
+    </Route>
+    <Route path='/admin' component={Admin} />
   </Route>
 );
 
@@ -58,6 +68,7 @@ if(module.hot) {
   require('../components/Signup');   // eslint-disable-line global-require
   require('../components/Group');   // eslint-disable-line global-require
   require('../components/Dashboard');   // eslint-disable-line global-require
+  require('../components/Admin');   // eslint-disable-line global-require
 }
 
 export default routes;
