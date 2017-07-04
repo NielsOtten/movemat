@@ -14,7 +14,6 @@ const Schema = new mongoose.Schema({
   users: [{
     type: mongoose.Schema.ObjectId,
     ref: 'User',
-    unique: errorMessages.UNIQUE_ERROR,
   }],
   allowedEmails: [{
     type: String,
