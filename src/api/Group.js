@@ -42,7 +42,6 @@ class GroupApi {
 
   postPhotos(photos) {
     const newPhotos = { newPhotos: photos };
-    console.log(newPhotos);
     return fetch(`/api/group/${this.id}/photos`, {
       mode: 'cors',
       credentials: 'same-origin',
@@ -55,6 +54,19 @@ class GroupApi {
     })
       .then(res => res.json())
       .then(data => data)
+      .catch((err) => { console.log(err); });
+  }
+
+  getPhotos() {
+    return fetch(`/api/group/${this.id}/photos`, {
+      credentials: 'same-origin',
+      method: 'GET',
+    })
+      .then(res => res.json())
+      .then((data) => {
+        console.log('data', data);
+        return data;
+      })
       .catch((err) => { console.log(err); });
   }
 }

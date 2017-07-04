@@ -106,6 +106,16 @@ Schema.statics.getDownloadedPhotos = function getDownloadedPhotos(group) {
       .catch(err => reject(err)));
 };
 
+Schema.statics.getPhotos = function getPhotos(group) {
+  return new Promise((resolve, reject) =>
+// eslint-disable-next-line no-underscore-dangle
+    this.find({ group: group._id })
+      .sort({ timestamp: 'asc' })
+      .exec()
+      .then(photos => resolve(photos))
+      .catch(err => reject(err)));
+};
+
 Schema.statics.getPhotoWithGroup = function getPhotoWithGroup(photoId, groupId) {
   return new Promise((resolve, reject) => this.findOne({ _id: photoId, group: groupId })
       .then(photo => resolve(photo))

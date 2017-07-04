@@ -20,8 +20,18 @@ class PhotoUpload extends Component {
     newPhotos: [],
   };
 
-  getPhotos = (e) => {
+  componentDidMount() {
+    this.getPhotos();
+  }
 
+  getPhotos = () => {
+    this.props.groupApi.getPhotos()
+      .then((uploadedPhotos) => {
+        this.setState({ uploadedPhotos });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   changeHandler(uploadedPhotos) {
@@ -61,7 +71,8 @@ class PhotoUpload extends Component {
         <section className={styles.photos}>
           <h2>UPLOADED PHOTOS</h2>
           {this.state.uploadedPhotos.map(photo => <Photo
-            key={photo.name + photo.lastModified}
+          // eslint-disable-next-line no-underscore-dangle
+            key={photo._id}
             preview={photo.path}
             title={photo.name}
           />)}

@@ -130,7 +130,7 @@ app.get('/api/group/:id/token', (req, res) => {
  * Endpoint to get all the updated photos from a group.
  * Need a token to retrieve tokens.
  */
-app.get('/api/group/:id/photos', (req, res) => {
+app.get('/api/group/:id/updatedPhotos', (req, res) => {
   const token = req.query.token;
   const id = req.params.id;
 
@@ -140,6 +140,24 @@ app.get('/api/group/:id/photos', (req, res) => {
   Group.getUpdateQueue(id, token)
     .then((json) => {
       res.json(json);
+      res.end();
+    })
+    .catch((err) => {
+      res.status(404);
+      res.json(err);
+      res.end();
+    });
+});
+
+app.get('/api/group/:id/photos', (req, res) => {
+  const token = req.query.token;
+  const id = req.params.id;
+  const user = req.user;
+
+  Group.getGroup(user, id)
+    .then(group => Photo.getPhotos(group))
+    .then((photos) => {
+      res.json(photos);
       res.end();
     })
     .catch((err) => {
