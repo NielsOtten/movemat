@@ -9,7 +9,6 @@ const router = express.Router();
  */
 router.get('/groups', (req, res) => {
   const user = req.user;
-  console.log(user);
 
   Group.getGroups(user)
     .then((groups) => {
