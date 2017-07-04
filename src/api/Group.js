@@ -1,4 +1,4 @@
-import blobUtil from 'blob-util';
+
 
 class GroupApi {
   constructor(id) {
@@ -36,7 +36,10 @@ class GroupApi {
       method: 'GET',
     })
       .then(res => res.json())
-      .then(data => data)
+      .then(data => {
+        console.log(data);
+        return data;
+      })
       .catch((err) => { console.log(err); });
   }
 
