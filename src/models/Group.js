@@ -52,7 +52,7 @@ Schema.statics.getGroup = function getGroup(user, id) {
 Schema.statics.getGroups = function getGroups(user) {
   return new Promise((resolve, reject) => {
 // eslint-disable-next-line no-underscore-dangle
-    this.find({ users: [user._id] })
+    this.find({ users: user._id })
       .then(groups => resolve(groups))
       .catch(err => reject(err));
   });
