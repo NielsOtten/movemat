@@ -5,7 +5,7 @@ const router = express.Router();
 
 /**
  * GET endpoint.
- * Get all the groupd from the given user.
+ * Get all the groups from the given user.
  */
 router.get('/groups', (req, res) => {
   Group.getGroups(req.user)
