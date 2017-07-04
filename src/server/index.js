@@ -295,9 +295,16 @@ app.post('/signup', passport.authenticate('local-signup', {
  */
 app.post('/api/group', (req, res) => {
   const newGroup = new Group(req.body);
-  newGroup.save();
-
-  res.json(newGroup);
+  newGroup.save()
+    .then(() => {
+      res.json(newGroup);
+      res.end();
+    })
+    .catch((err) => {
+      res.status(500);
+      res.json(err);
+      res.end();
+    });
 });
 
 app.listen(port, () => {
