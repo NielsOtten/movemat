@@ -150,12 +150,14 @@ app.get('/api/group/:id/updatedPhotos', (req, res) => {
 });
 
 app.get('/api/group/:id/photos', (req, res) => {
-  const token = req.query.token;
   const id = req.params.id;
   const user = req.user;
 
   Group.getGroup(user, id)
-    .then(group => Photo.getPhotos(group))
+    .then(group => {
+      console.log(group);
+      return Photo.getPhotos(group);
+    })
     .then((photos) => {
       res.json(photos);
       res.end();
