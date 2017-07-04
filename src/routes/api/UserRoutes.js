@@ -8,7 +8,10 @@ const router = express.Router();
  * Get all the groups from the given user.
  */
 router.get('/groups', (req, res) => {
-  Group.getGroups(req.user)
+  const user = req.user;
+  console.log(user);
+
+  Group.getGroups(user)
     .then((groups) => {
       res.json(groups);
     })
