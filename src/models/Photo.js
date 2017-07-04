@@ -46,7 +46,7 @@ Schema.methods.addToAzure = function addToAzure(file) {
       if(!error) {
         blobService.createBlockBlobFromText(this.group.toString(), fileName, file.buffer, (bloberror, blobresult, blobresponse) => {
           if(!bloberror) {
-            this.path = `http://localhost:3000/api/group/${this.group.toString()}/photos/`;
+            this.path = `https://steps-upload.herokuapp.com/api/group/${this.group.toString()}/photos/`;
             this.blobName = blobresult.name;
             resolve();
           } else {
