@@ -295,6 +295,7 @@ app.post('/signup', passport.authenticate('local-signup', {
  */
 app.post('/api/group', (req, res) => {
   const newGroup = new Group(req.body);
+
   newGroup.save()
     .then(() => {
       res.json(newGroup);

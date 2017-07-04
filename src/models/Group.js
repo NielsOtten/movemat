@@ -26,7 +26,6 @@ const Schema = new mongoose.Schema({
       validator: isEmail,
       message: `${errorMessages.VALIDATE_ERROR} e-mailadres.`,
     },
-    unique: errorMessages.UNIQUE_ERROR,
   }],
   name: {
     type: String,
