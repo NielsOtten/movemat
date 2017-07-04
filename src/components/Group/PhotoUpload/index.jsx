@@ -27,7 +27,9 @@ class PhotoUpload extends Component {
   getPhotos = () => {
     this.props.groupApi.getPhotos()
       .then((uploadedPhotos) => {
-        this.setState({ uploadedPhotos });
+        if(uploadedPhotos && uploadedPhotos instanceof Array) {
+          this.setState({ uploadedPhotos });
+        }
       })
       .catch((err) => {
         console.log(err);
