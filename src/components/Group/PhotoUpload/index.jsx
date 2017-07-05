@@ -67,7 +67,7 @@ class PhotoUpload extends Component {
           <h2>NEW PHOTOS</h2>
           {this.state.newPhotos.map(photo => <Photo
             key={photo.name + photo.lastModified}
-            preview={photo.path}
+            preview={`${photo.path}?preview=1`}
             title={photo.name}
           />)}
         </section>
@@ -76,7 +76,7 @@ class PhotoUpload extends Component {
           {this.state.uploadedPhotos.map(photo => <Photo
           // eslint-disable-next-line no-underscore-dangle
             key={photo._id}
-            preview={photo.path}
+            preview={`${photo.path}?preview=1`}
             title={photo.name}
           />)}
         </section>

@@ -136,10 +136,10 @@ router.get('/:id/photos', (req, res) => {
  * Get the azure url of a photo and set the photo to downloaded true.
  */
 router.get('/:id/photos/:photoId', (req, res) => {
-  const token = req.query.token;
+  const { token, preview } = req.query;
   const { id, photoId } = req.params;
 
-  Photo.downloadPhoto(id, photoId, token)
+  Photo.downloadPhoto(id, photoId, token, preview)
     .then(photo => photo.getUrlFromAzure())
     .then((url) => {
       res.redirect(url);

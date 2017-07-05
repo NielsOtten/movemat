@@ -75,11 +75,13 @@ Schema.methods.getUrlFromAzure = function getUrlFromAzure() {
 };
 
 
-Schema.statics.downloadPhoto = function downloadPhoto(groupId, photoId, token) {
+Schema.statics.downloadPhoto = function downloadPhoto(groupId, photoId, token, preview) {
   return new Promise((resolve, reject) => Group.getGroupWithToken(groupId, token)
     .then(() => this.getPhotoWithGroup(photoId, groupId))
     .then((photo) => {
-      photo.downloaded = true;
+      if(!preview) {
+        photo.downloaded = true;
+      }
       return photo.save();
     })
     .then(photo => resolve(photo))
