@@ -43,7 +43,7 @@ const Schema = new mongoose.Schema({
 Schema.statics.getGroup = function getGroup(user, id) {
   return new Promise((resolve, reject) => {
 // eslint-disable-next-line no-underscore-dangle
-    this.findOne({ _id: id, users: [user._id] })
+    this.findOne({ _id: id, users: { $in: [user] } })
       .then(group => resolve(group))
       .catch(err => reject(err));
   });
