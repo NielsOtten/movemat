@@ -1,7 +1,9 @@
+/* eslint-disable no-underscore-dangle */
 import express from 'express';
 import multer from 'multer';
 import Group from '../../models/Group';
 import Photo from '../../models/Photo';
+import User from '../../models/User';
 
 const router = express.Router();
 const storage = multer.memoryStorage();
@@ -17,6 +19,24 @@ router.post('/', (req, res) => {
   newGroup.save()
     .then(() => {
       res.json(newGroup);
+      res.end();
+    })
+    .catch((err) => {
+      res.status(500);
+      res.json(err);
+      res.end();
+    });
+});
+
+/**
+ * Get endpoint.
+ * This endpoint will get all the available groups.
+ */
+router.get('/', (req, res) => {
+  // TODO: Add check for role and user.
+  Group.find()
+    .then((groups) => {
+      res.json(groups);
       res.end();
     })
     .catch((err) => {

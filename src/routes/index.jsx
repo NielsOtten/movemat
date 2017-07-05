@@ -38,8 +38,14 @@ const importDashboard = (nextState, cb) => {
     .catch((e) => { throw e; });
 };
 
-const importAdmin = (nextState, cb) => {
-  import('../components/Admin')
+const importAdminGroup = (nextState, cb) => {
+  import('../components/Admin/Group')
+    .then(module => cb(null, module.default))
+    .catch((e) => { throw e; });
+};
+
+const importAdminUser = (nextState, cb) => {
+  import('../components/Admin/User')
     .then(module => cb(null, module.default))
     .catch((e) => { throw e; });
 };
@@ -48,14 +54,18 @@ const importAdmin = (nextState, cb) => {
 // https://github.com/reactjs/react-router/blob/master/docs/guides/DynamicRouting.md
 const routes = (
   <Route>
-    <Route path='/' component={App}>
+    <Route  path='/' component={App}>
       <IndexRoute getComponent={importHome} />
       <Route path='login' getComponent={importLogin} />
       <Route path='signup' getComponent={importSignUp} />
       <Route path='dashboard' getComponent={importDashboard} />
       <Route path='familie/:id' getComponent={importGroup} />
     </Route>
-    <Route path='/admin' component={Admin} />
+    <Route path='/admin' component={Admin}>
+      <IndexRoute getComponent={importAdminGroup} />
+      <Route path='/group' getComponent={importAdminGroup} />
+      <Route path='/user' getComponent={importAdminUser} />
+    </Route>
   </Route>
 );
 
@@ -68,7 +78,8 @@ if(module.hot) {
   require('../components/Signup');   // eslint-disable-line global-require
   require('../components/Group');   // eslint-disable-line global-require
   require('../components/Dashboard');   // eslint-disable-line global-require
-  require('../components/Admin');   // eslint-disable-line global-require
+  require('../components/Admin/Group');   // eslint-disable-line global-require
+  require('../components/Admin/User');   // eslint-disable-line global-require
 }
 
 export default routes;
