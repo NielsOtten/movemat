@@ -31,6 +31,10 @@ const Schema = new mongoose.Schema({
     type: Boolean,
     default: () => false,
   },
+  deleted: {
+    type: Boolean,
+    default: () => false,
+  },
   timestamp: {
     type: Date,
     default: () => new Date(),
@@ -74,6 +78,11 @@ Schema.methods.getUrlFromAzure = function getUrlFromAzure() {
   });
 };
 
+Schema.statics.prepareDeletion = function prepareDeletion(groupId, photoId, user) {
+  return new Promise((resolve, reject) => {
+    
+  });
+};
 
 Schema.statics.downloadPhoto = function downloadPhoto(groupId, photoId, token, preview) {
   return new Promise((resolve, reject) => Group.getGroupWithToken(groupId, token)

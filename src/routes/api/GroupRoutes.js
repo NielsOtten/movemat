@@ -152,6 +152,15 @@ router.get('/:id/photos/:photoId', (req, res) => {
 });
 
 /**
+ * DELETE endpoint.
+ * This endpoint deletes a photo.
+ */
+router.delete('/:id/photos/:photoId', (req, res) => {
+  const { id, photoId } = req.params;
+  const user = req.user;
+});
+
+/**
  * POST endpoint
  * Add all given photos to azure and add them to mongoose.
  * Multer is used to obtain the photo's from the request.
