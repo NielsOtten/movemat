@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import express from 'express';
 import multer from 'multer';
 import Group from '../../models/Group';

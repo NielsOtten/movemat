@@ -48,6 +48,7 @@ rules:
         - "error"
         - "info"
   no-bitwise: 0
+  no-underscore-dangle: 0
   react/no-did-mount-set-state: 0
 
 parser: babel-eslint

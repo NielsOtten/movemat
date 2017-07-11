@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 import express from 'express';
 import compression from 'compression';
 import mongoose from 'mongoose';

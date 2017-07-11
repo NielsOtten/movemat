@@ -26,7 +26,6 @@ class Dashboard extends Component {
   }
 
   render() {
-// eslint-disable-next-line no-underscore-dangle
     const groups = this.state.groups.map(group => <li key={group._id}><Link to={`/familie/${group._id}`}>Group Link</Link></li>);
 
     return (

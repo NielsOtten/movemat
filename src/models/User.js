@@ -53,7 +53,6 @@ Schema.pre('save', function (next) {
     if(saltErr) return next(saltErr);
 
     // hash the password along with our new salt.
-// eslint-disable-next-line consistent-return
     bcrypt.hash(user.password, salt, (hashErr, hash) => {
       if(hashErr) return next(hashErr);
 
@@ -75,7 +74,7 @@ Schema.methods.getUserByEmail = function getUserByEmail(email) {
       .then(user => resolve(user))
       .catch(() => reject());
   });
-}
+};
 
 Schema.plugin(uniqueValidator);
 

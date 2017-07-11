@@ -74,7 +74,6 @@ class PhotoUpload extends Component {
         <section className={styles.photos}>
           <h2>UPLOADED PHOTOS</h2>
           {this.state.uploadedPhotos.map(photo => <Photo
-          // eslint-disable-next-line no-underscore-dangle
             key={photo._id}
             preview={`${photo.path}?preview=1`}
             title={photo.name}

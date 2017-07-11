@@ -42,7 +42,6 @@ const Schema = new mongoose.Schema({
 
 Schema.statics.getGroup = function getGroup(user, id) {
   return new Promise((resolve, reject) => {
-// eslint-disable-next-line no-underscore-dangle
     this.findOne({ _id: id, users: { $in: [user] } })
       .then(group => resolve(group))
       .catch(err => reject(err));
@@ -51,7 +50,6 @@ Schema.statics.getGroup = function getGroup(user, id) {
 
 Schema.statics.getGroups = function getGroups(user) {
   return new Promise((resolve, reject) => {
-// eslint-disable-next-line no-underscore-dangle
     this.find({ users: { $in: [user] } })
       .then(groups => resolve(groups))
       .catch(err => reject(err));
@@ -117,7 +115,6 @@ Schema.methods.addUser = function addUser(user) {
       this.hasUserAccess(user)
         .then(() => reject({ message: errorMessages.USER_ALREADY_REGISTERED }))
         .catch(() => {
-// eslint-disable-next-line no-underscore-dangle
           this.users.addToSet(user._id);
           this.save();
           resolve(this);

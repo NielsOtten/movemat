@@ -100,7 +100,6 @@ Schema.statics.downloadPhoto = function downloadPhoto(groupId, photoId, token, p
 Schema.statics.getNewPhotos = function getNewPhotos(group) {
   return new Promise((resolve, reject) => {
     if(group === null) reject({ message: 'Combination Token + Group is undefined.' });
-    // eslint-disable-next-line no-underscore-dangle
     this.find({ group: group._id, downloaded: false }).sort({ timestamp: 'asc' }).exec()
       .then(photos => resolve(photos))
       .catch(err => reject(err));
@@ -109,7 +108,6 @@ Schema.statics.getNewPhotos = function getNewPhotos(group) {
 
 Schema.statics.getDownloadedPhotos = function getDownloadedPhotos(group) {
   return new Promise((resolve, reject) =>
-// eslint-disable-next-line no-underscore-dangle
      this.find({ group: group._id, downloaded: true })
       .sort({ timestamp: 'asc' })
       .exec()
@@ -119,7 +117,6 @@ Schema.statics.getDownloadedPhotos = function getDownloadedPhotos(group) {
 
 Schema.statics.getPhotos = function getPhotos(group) {
   return new Promise((resolve, reject) =>
-// eslint-disable-next-line no-underscore-dangle
     this.find({ group: group._id })
       .sort({ timestamp: 'asc' })
       .exec()
