@@ -10,6 +10,7 @@ import template from './template';
 import Auth from './config/passport';
 import GroupRoutes from '../routes/api/GroupRoutes';
 import UserRoutes from '../routes/api/UserRoutes';
+import './envVariables';
 
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = process.env.PORT || parseInt(KYT.SERVER_PORT, 10);
@@ -18,10 +19,6 @@ const app = express();
 const mongoURL = process.env.MONGODB_URI || 'mongodb://localhost/steps';
 mongoose.Promise = Promise;
 mongoose.connect(mongoURL);
-
-process.env.AZURE_STORAGE_ACCOUNT = 'steps';
-process.env.AZURE_STORAGE_ACCESS_KEY = 'hzKCavlWIuANG7hkum0burz3yMH7/dB5Bu8XpKkG9br6fRyuJ4kQuGaHuEcEiVWjykpkDFrryFE37PGuq0mrZA==';
-process.env.AZURE_STORAGE_CONNECTION_STRING = 'DefaultEndpointsProtocol=https;AccountName=steps;AccountKey=hzKCavlWIuANG7hkum0burz3yMH7/dB5Bu8XpKkG9br6fRyuJ4kQuGaHuEcEiVWjykpkDFrryFE37PGuq0mrZA==;EndpointSuffix=core.windows.net';
 
 // Remove annoying Express header addition.
 app.disable('x-powered-by');
