@@ -72,6 +72,19 @@ class GroupApi {
       })
       .catch((err) => { console.log(err); });
   }
+
+  deletePhoto(photoId) {
+    return fetch(`/api/group/${this.id}/photos/${photoId}`, {
+      credentials: 'same-origin',
+      method: 'DELETE',
+    })
+      .then(res => res.json())
+      .then((data) => {
+        console.log('data', data);
+        return data;
+      })
+      .catch((err) => { console.log(err); });
+  }
 }
 
 export default GroupApi;

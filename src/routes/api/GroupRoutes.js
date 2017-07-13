@@ -103,6 +103,7 @@ router.get('/:id/updatedPhotos', (req, res) => {
       res.end();
     })
     .catch((err) => {
+      console.log(err);
       res.status(404);
       res.json(err);
       res.end();
@@ -139,7 +140,10 @@ router.get('/:id/photos/:photoId', (req, res) => {
   const { id, photoId } = req.params;
 
   Photo.downloadPhoto(id, photoId, token, preview)
-    .then(photo => photo.getUrlFromAzure())
+    .then(photo => {
+      console.log(photo);
+      photo.getUrlFromAzure();
+    })
     .then((url) => {
       res.redirect(url);
       res.end();
@@ -157,6 +161,20 @@ router.get('/:id/photos/:photoId', (req, res) => {
 router.delete('/:id/photos/:photoId', (req, res) => {
   const { id, photoId } = req.params;
   const user = req.user;
+
+  if(!req.user) return res.end();
+
+  Photo.prepareDeletion(id, photoId, user)
+    .then((data) => {
+    console.log(data);
+      res.json({ newPhotos: data });
+      res.end();
+    })
+    .catch((err) => {
+    console.log(err);
+      res.json(err);
+      res.end();
+    });
 });
 
 /**
@@ -177,7 +195,7 @@ router.post('/:id/photos', upload.array('image'), (req, res) => {
       loggedIn: false,
       redirectUri: `/login?redirectUri=${redirectUri}&messages=${messages}`,
     });
-    res.end();
+    return res.end();
   }
 
   Promise.all(req.files.map(file => new Promise((resolve, reject) => {

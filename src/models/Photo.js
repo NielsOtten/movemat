@@ -78,10 +78,14 @@ Schema.methods.getUrlFromAzure = function getUrlFromAzure() {
   });
 };
 
-Schema.statics.prepareDeletion = function prepareDeletion(groupId, photoId, user) {
-  return new Promise((resolve, reject) => {
-    
-  });
+Schema.statics.prepareDeletion = function prepareDeletion(groupId, photoId) {
+  return new Promise((resolve, reject) => this.findOne({ _id: photoId, group: groupId })
+    .then((photo) => {
+      photo.deleted = true;
+      return photo.save();
+    })
+    .then(photo => resolve(photo))
+    .catch(err => reject(err)));
 };
 
 Schema.statics.downloadPhoto = function downloadPhoto(groupId, photoId, token, preview) {
@@ -100,7 +104,7 @@ Schema.statics.downloadPhoto = function downloadPhoto(groupId, photoId, token, p
 Schema.statics.getNewPhotos = function getNewPhotos(group) {
   return new Promise((resolve, reject) => {
     if(group === null) reject({ message: 'Combination Token + Group is undefined.' });
-    this.find({ group: group._id, downloaded: false }).sort({ timestamp: 'asc' }).exec()
+    this.find({ group: group._id, downloaded: false, deleted: false }).sort({ timestamp: 'asc' }).exec()
       .then(photos => resolve(photos))
       .catch(err => reject(err));
   });
@@ -108,7 +112,16 @@ Schema.statics.getNewPhotos = function getNewPhotos(group) {
 
 Schema.statics.getDownloadedPhotos = function getDownloadedPhotos(group) {
   return new Promise((resolve, reject) =>
-     this.find({ group: group._id, downloaded: true })
+     this.find({ group: group._id, downloaded: true, deleted: false })
+      .sort({ timestamp: 'asc' })
+      .exec()
+      .then(photos => resolve(photos))
+      .catch(err => reject(err)));
+};
+
+Schema.statics.getDeletedPhotos = function getDeletedPhotos(group) {
+  return new Promise((resolve, reject) =>
+    this.find({ group: group._id, deleted: true })
       .sort({ timestamp: 'asc' })
       .exec()
       .then(photos => resolve(photos))

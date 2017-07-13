@@ -68,6 +68,7 @@ Schema.statics.getUpdateQueue = function getUpdateQueue(id, token) {
   let searchGroup = {};
   let newPhotos = [];
   let downloadedPhotos = [];
+  let deletedPhotos = [];
 
   return new Promise((resolve, reject) => {
     this.getGroupWithToken(id, token)
@@ -78,7 +79,10 @@ Schema.statics.getUpdateQueue = function getUpdateQueue(id, token) {
         return Photo.getDownloadedPhotos(searchGroup);
       })
       .then(loadedPhotos => downloadedPhotos = loadedPhotos)
+      .then(() => Photo.getDeletedPhotos(searchGroup))
+      .then(newDeletedPhotos => deletedPhotos = newDeletedPhotos)
       .then(() => resolve({
+        deleted_photos: deletedPhotos,
         updated_photos: newPhotos,
         photos: downloadedPhotos,
         group: searchGroup,
