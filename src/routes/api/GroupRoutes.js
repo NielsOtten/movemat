@@ -142,7 +142,7 @@ router.get('/:id/photos/:photoId', (req, res) => {
   Photo.downloadPhoto(id, photoId, token, preview)
     .then((photo) => {
       // TODO: Remove from azure.
-      if(photo.deleted && photo.preview === false) return photo.remove().exec();
+      if(photo.deleted && preview === false) return photo.remove().exec();
       return photo.getUrlFromAzure();
     })
     .then((url) => {
