@@ -140,9 +140,10 @@ router.get('/:id/photos/:photoId', (req, res) => {
   const { id, photoId } = req.params;
 
   Photo.downloadPhoto(id, photoId, token, preview)
-    .then(photo => {
-      console.log(photo);
-      photo.getUrlFromAzure();
+    .then((photo) => {
+      // TODO: Remove from azure.
+      if(photo.deleted) return photo.remove().exec();
+      return photo.getUrlFromAzure();
     })
     .then((url) => {
       res.redirect(url);
@@ -166,12 +167,12 @@ router.delete('/:id/photos/:photoId', (req, res) => {
 
   Photo.prepareDeletion(id, photoId, user)
     .then((data) => {
-    console.log(data);
+      console.log(data);
       res.json({ newPhotos: data });
       res.end();
     })
     .catch((err) => {
-    console.log(err);
+      console.log(err);
       res.json(err);
       res.end();
     });
