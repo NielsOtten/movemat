@@ -1,19 +1,72 @@
 
 @import '../../../shared-styles/variables';
 
-.nav {
-  width: $content-width;
-  margin: 0 auto;
-  padding: $padding;
+header {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  background-color: #292c31;
+  color: #ffffff;
+  font-family: 'Montserrat', serif;
+}
+
+.logo, .mainMenu, .secondMenu {
+  padding: 0;
+}
+
+.logo {
+  padding: 8px 25px;
+  font-size: 18px;
+}
+
+.mainMenu {
+  flex: 1;
   text-align: center;
 }
 
 .navItem {
   display: inline-block;
+  margin: 5px;
 }
 
 .link {
-  padding: $padding;
-  color: #00a68f;
+  padding: 8px 25px;
   font-size: 18px;
+  font-weight: 300;
+  text-decoration: none;
+  position: relative;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:visited {
+    color: #ffffff;
+  }
+
+  &:before {
+    content: "";
+    position: absolute;
+    width: 60%;
+    height: 2px;
+    bottom: 5px;
+    left: 50%;
+    background-color: #ffffff;
+    visibility: hidden;
+    -webkit-transform: translateX(-50%) scaleX(0);
+    transform: translateX(-50%) scaleX(0);
+    -webkit-transition: all 0.3s ease-in-out 0s;
+    transition: all 0.3s ease-in-out 0s;
+  }
+
+  &:hover:before {
+    visibility: visible;
+    -webkit-transform: translateX(-50%) scaleX(1);
+    transform: translateX(-50%) scaleX(1);
+  }
+}
+
+.loginLink {
+  border-radius: 20px;
+  background-color: #53a9fe;
 }

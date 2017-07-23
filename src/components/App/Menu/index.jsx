@@ -16,17 +16,22 @@ class Menu extends Component {
 
   render() {
     return (
-      <ul className={styles.nav}>
-        <li className={styles.navItem}>
-          <Link className={styles.link} to='/' onClick={this.onClickHandler}>Home</Link>
-        </li>
-        <li className={styles.navItem}>
-          <Link className={styles.link} to='/login' onClick={this.onClickHandler}>login</Link>
-        </li>
-        <li className={styles.navItem}>
-          <Link className={styles.link} to='/signup' onClick={this.onClickHandler}>signup</Link>
-        </li>
-      </ul>
+      <header>
+        <div className={styles.logo}>Steps</div>
+        <ul className={styles.mainMenu}>
+          <li className={styles.navItem}>
+            <Link className={styles.link} to='/' onClick={this.onClickHandler}>Home</Link>
+          </li>
+        </ul>
+        <ul className={styles.secondMenu}>
+          <li className={styles.navItem}>
+            <Link className={[styles.link, styles.loginLink].join(' ')} to='/login' onClick={this.onClickHandler}>Log in</Link>
+          </li>
+          <li className={styles.navItem}>
+            <Link className={styles.link} to='/signup' onClick={this.onClickHandler}>Registreer</Link>
+          </li>
+        </ul>
+      </header>
     );
   }
 }
