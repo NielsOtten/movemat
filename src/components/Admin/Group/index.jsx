@@ -39,13 +39,16 @@ class AdminGroup extends Component {
     />);
 
     return (
-      <Table>
+      <Table
+        multiSelectable
+      >
         <TableHeader>
           <TableRow>
             <TableHeaderColumn>ID</TableHeaderColumn>
             <TableHeaderColumn>Naam</TableHeaderColumn>
             <TableHeaderColumn>Allowed Emails</TableHeaderColumn>
             <TableHeaderColumn>Registered Users</TableHeaderColumn>
+            <TableHeaderColumn>Actions</TableHeaderColumn>
           </TableRow>
         </TableHeader>
         <TableBody>
