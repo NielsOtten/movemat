@@ -3,9 +3,6 @@ import { Link } from 'react-router';
 import styles from './styles.scss';
 import GroupApi from '../../api/Group';
 
-/**
- * This dashboard is used to view all your groups.
- */
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -26,7 +23,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const groups = this.state.groups.map(group => <li key={group._id}><Link to={`/familie/${group._id}`}>Group Link</Link></li>);
+    const groups = this.state.groups.map(group => <li key={group._id}><Link to={`/familie/${group._id}`}>{group.name}</Link></li>);
 
     return (
       <ul className={styles.dashboard}>
