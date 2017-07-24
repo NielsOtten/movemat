@@ -56,7 +56,7 @@ app.get('*', (req, res) => {
   const messages = [];
 // eslint-disable-next-line no-useless-escape
   const url = req.originalUrl.split('?').shift();
-  const allowed = ['', '/', '/login', '/signup', '/admin'].filter(allowedPath => url === allowedPath).length;
+  const allowed = ['', '/', '/login', '/signup', '/admin', '/api/user/isLoggedIn'].filter(allowedPath => url === allowedPath).length;
   if(allowed <= 0 && !req.user) {
     messages.push('Je moet ingelogd zijn om deze pagina te bekijken.');
     const redirectUri = req.url;

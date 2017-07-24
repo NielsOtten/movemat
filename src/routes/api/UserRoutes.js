@@ -19,4 +19,14 @@ router.get('/groups', (req, res) => {
     });
 });
 
+/**
+ * GET endpoint.
+ * Check if user is logged in.
+ */
+router.get('/isLoggedIn', (req, res) => {
+  res.status(401);
+  if(req.user) res.status(200);
+  res.end();
+});
+
 export default router;
