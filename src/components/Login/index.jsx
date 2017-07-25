@@ -34,7 +34,7 @@ class Login extends Component {
     const underlineStyle = { borderColor: '#53a9fe' };
     const colorStyle = { color: '#53a9fe' };
     return (
-      <div className={styles.login}>
+      <div className={styles.form}>
         <h2>Log in</h2>
         <div className={styles.innerLogin}>
           <div className={styles.errors}>

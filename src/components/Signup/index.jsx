@@ -1,6 +1,8 @@
 
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 import styles from './styles.scss';
 import PassportErrorsStore from '../../client/stores/PassportErrorsStore';
 
@@ -12,17 +14,51 @@ class Signup extends Component {
   }
 
   render() {
+    const underlineStyle = { borderColor: '#53a9fe' };
+    const colorStyle = { color: '#53a9fe' };
     return (
-      <div>
-        <ul className={styles.errors}>
-          {Signup.renderErrors()}
-        </ul>
-        <form method='POST' action='/signup'>
-          <input type='text' name='email' placeholder='Email' />
-          <input type='text' name='username' placeholder='Username' />
-          <input type='password' name='password' placeholder='Password' />
-          <input type='submit' />
-        </form>
+      <div className={styles.form}>
+        <h2>Registreer</h2>
+        <div className={styles.innerLogin}>
+          <ul className={styles.errors}>
+            {Signup.renderErrors()}
+          </ul>
+          <form method='POST' action='/signup'>
+            <TextField
+              name='email'
+              floatingLabelText='Email'
+              floatingLabelStyle={colorStyle}
+              floatingLabelFocusStyle={colorStyle}
+              underlineFocusStyle={underlineStyle}
+              fullWidth
+            />
+            <TextField
+              name='username'
+              floatingLabelText='Gebruikersnaam'
+              floatingLabelStyle={colorStyle}
+              floatingLabelFocusStyle={colorStyle}
+              underlineFocusStyle={underlineStyle}
+              fullWidth
+            />
+            <TextField
+              name='password'
+              floatingLabelText='Wachtwoord'
+              floatingLabelStyle={colorStyle}
+              floatingLabelFocusStyle={colorStyle}
+              underlineFocusStyle={underlineStyle}
+              fullWidth
+            />
+            <TextField
+              name='passwordsecond'
+              floatingLabelText='Wachtwoord opnieuw'
+              floatingLabelStyle={colorStyle}
+              floatingLabelFocusStyle={colorStyle}
+              underlineFocusStyle={underlineStyle}
+              fullWidth
+            />
+            <RaisedButton type='submit' label='Registreer' className={styles.raisedButton} backgroundColor='#53a9fe' labelColor='#ffffff' />
+          </form>
+        </div>
       </div>
     );
   }
