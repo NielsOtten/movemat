@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import MenuComponent from './Menu';
 import styles from './styles.scss';
 import PassportErrorsStore from '../../client/stores/PassportErrorsStore';
@@ -24,9 +25,11 @@ class App extends Component {
     return (
       <div>
         <MenuComponent />
-        <div className={styles.content}>
-          {this.renderChildren()}
-        </div>
+        <MuiThemeProvider>
+          <div className={styles.content}>
+            {this.renderChildren()}
+          </div>
+        </MuiThemeProvider>
       </div>
     );
   }
