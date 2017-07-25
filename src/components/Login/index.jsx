@@ -9,7 +9,7 @@ import styles from './styles.scss';
 @observer
 class Login extends Component {
   static renderErrors() {
-    return PassportErrorsStore.errors.map(error => <li key={error.key} dangerouslySetInnerHTML={{ __html: error.message }} />);
+    return PassportErrorsStore.errors.map(error => <p key={error.key} dangerouslySetInnerHTML={{ __html: error.message }} />);
   }
 
   constructor(props) {
@@ -27,23 +27,40 @@ class Login extends Component {
   }
 
   renderMessages() {
-    return this.state.messages.map((message, index) => <li key={index} dangerouslySetInnerHTML={{ __html: message }} />);
+    return this.state.messages.map((message, index) => <p key={index} dangerouslySetInnerHTML={{ __html: message }} />);
   }
 
   render() {
+    const underlineStyle = { borderColor: '#53a9fe' };
+    const colorStyle = { color: '#53a9fe' };
     return (
       <div className={styles.login}>
         <h2>Log in</h2>
         <div className={styles.innerLogin}>
-          <ul className={styles.errors}>
+          <div className={styles.errors}>
             {Login.renderErrors()}
-          </ul>
-          <ul className={styles.messages}>
+          </div>
+          <div className={styles.messages}>
             {this.renderMessages()}
-          </ul>
+          </div>
           <form method='POST' action='/login'>
-            <TextField name='username' floatingLabelText='Gebruikersnaam of email' fullWidth />
-            <TextField name='password' floatingLabelText='Wachtwoord' type='password' fullWidth />
+            <TextField
+              name='username'
+              floatingLabelText='Gebruikersnaam of email'
+              floatingLabelStyle={colorStyle}
+              floatingLabelFocusStyle={colorStyle}
+              underlineFocusStyle={underlineStyle}
+              fullWidth
+            />
+            <TextField
+              name='password'
+              floatingLabelText='Wachtwoord'
+              type='password'
+              floatingLabelStyle={colorStyle}
+              floatingLabelFocusStyle={colorStyle}
+              underlineFocusStyle={underlineStyle}
+              fullWidth
+            />
             <input type='hidden' name='redirectUri' value={this.state.redirectUri} />
             <RaisedButton type='submit' label='Log in' className={styles.raisedButton} backgroundColor='#53a9fe' labelColor='#ffffff' />
           </form>
