@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
-import fetch from 'fetch-everywhere';
 import request from 'superagent';
 import GroupApi from '../../../api/Group';
 import Photo from './Photo';
@@ -18,23 +17,6 @@ class PhotoUpload extends Component {
   state = {
     uploadedPhotos: [],
     newPhotos: [],
-  };
-
-  componentDidMount() {
-    this.getPhotos();
-  }
-
-  getPhotos = () => {
-    this.props.groupApi.getPhotos()
-      .then((uploadedPhotos) => {
-        console.log(uploadedPhotos);
-        if(uploadedPhotos && uploadedPhotos instanceof Array) {
-          this.setState({ uploadedPhotos });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   changeHandler(uploadedPhotos) {
@@ -58,25 +40,15 @@ class PhotoUpload extends Component {
   render() {
     return (
       <div>
-        <section className={styles.upload}>
-          <Dropzone onDrop={this.changeHandler}>
-            <p>Try dropping some files here, or click to select files to upload.</p>
-          </Dropzone>
-        </section>
+        <Dropzone
+          className={styles.dropZone}
+          onDrop={this.changeHandler}
+        >
+          <h2>Klik hier om bestanden te uploaden of sleep de bestanden hierop.</h2>
+        </Dropzone>
         <section className={styles.photos}>
-          <h2>NEW PHOTOS</h2>
           {this.state.newPhotos.map(photo => <Photo
             key={photo.name + photo.lastModified}
-            id={photo._id}
-            preview={`${photo.path}?preview=1`}
-            title={photo.name}
-            groupApi={this.props.groupApi}
-          />)}
-        </section>
-        <section className={styles.photos}>
-          <h2>UPLOADED PHOTOS</h2>
-          {this.state.uploadedPhotos.map(photo => <Photo
-            key={photo._id}
             id={photo._id}
             preview={`${photo.path}?preview=1`}
             title={photo.name}

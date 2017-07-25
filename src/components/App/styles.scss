@@ -6,7 +6,8 @@
 }
 
 .content {
-  width: $content-width;
+  width: 100%;
+  max-width: 1024px;
   margin: $padding auto;
 }
 
