@@ -56,6 +56,22 @@
   }
 }
 
+@media only screen and (max-width: 768px) {
+  .photo {
+    width: 33%;
+    padding-bottom: 33%;
+    box-sizing: border-box;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .photo {
+    width: 50%;
+    padding-bottom: 50%;
+    box-sizing: border-box;
+  }
+}
+
 .innerBox {
   position: absolute;
   left: 10px;
