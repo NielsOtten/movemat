@@ -42,6 +42,7 @@ class Signup extends Component {
             />
             <TextField
               name='password'
+              type='password'
               floatingLabelText='Wachtwoord'
               floatingLabelStyle={colorStyle}
               floatingLabelFocusStyle={colorStyle}
@@ -50,6 +51,7 @@ class Signup extends Component {
             />
             <TextField
               name='passwordsecond'
+              type='password'
               floatingLabelText='Wachtwoord opnieuw'
               floatingLabelStyle={colorStyle}
               floatingLabelFocusStyle={colorStyle}

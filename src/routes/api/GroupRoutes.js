@@ -33,9 +33,12 @@ router.post('/', (req, res) => {
  */
 router.get('/', (req, res) => {
   // TODO: Add check for role and user.
-  Group.find()
-    .then((groups) => {
-      res.json(groups);
+  Group.find({})
+    .populate('users')
+    .exec()
+    .then(group => group)
+    .then((newGroups) => {
+      res.json(newGroups);
       res.end();
     })
     .catch((err) => {

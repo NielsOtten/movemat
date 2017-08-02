@@ -49,9 +49,9 @@ class Group extends Component {
   render() {
     return (
       <div>
-        {/*<form onSubmit={this.onSumbitHandler}>*/}
-          {/*<input type='submit' />*/}
-        {/*</form>*/}
+        <form onSubmit={this.onSumbitHandler}>
+          <input type='submit' />
+        </form>
         <PhotoUpload groupApi={this.GroupAPI} groupId={this.props.params.id}/>
         <div className={styles.photos}>
           {this.uploadedPhotos.map(photo => <Photo
