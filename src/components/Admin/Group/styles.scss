@@ -7,3 +7,16 @@
 .raisedButton {
   display: block;
 }
+
+.popupContext {
+  background-color: #ffffff;
+  width: 350px;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  margin-left: -175px;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+  border-radius: 5px;
+  overflow: hidden;
+  z-index: 100;
+}

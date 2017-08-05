@@ -1,4 +1,4 @@
-
+import fetch from 'fetch-everywhere';
 
 class GroupApi {
   constructor(id) {

@@ -69,6 +69,24 @@ router.post('/:id', (req, res) => {
     });
 });
 
+router.delete('/:id', (req, res) => {
+  const id = req.params.id;
+  const user = req.user;
+
+  if(!user) return res.json('nope');
+
+  Group.findOne({ _id: id })
+    .then(group => group.remove().exec())
+    .then(() => {
+      res.json({ removed: true });
+      res.end();
+    })
+    .catch((err) => {
+      res.json(err);
+      res.end();
+    });
+});
+
 /**
  * GET endpoint
  * Endpoint to get the token from a group.
