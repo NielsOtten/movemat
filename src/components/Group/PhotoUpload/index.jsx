@@ -50,7 +50,7 @@ class PhotoUpload extends Component {
           {this.state.newPhotos.map(photo => <Photo
             key={photo.name + photo.lastModified}
             id={photo._id}
-            preview={`${photo.path}?preview=1`}
+            preview={`${photo.thumbnail}?preview=1`}
             title={photo.name}
             groupApi={this.props.groupApi}
           />)}

@@ -177,6 +177,26 @@ router.get('/:id/photos/:photoId', (req, res) => {
 });
 
 /**
+ * GET endpoint,
+ * Get the azure url of a photo and set the photo to downloaded true.
+ */
+router.get('/:id/photos/thumbnail/:photoId', (req, res) => {
+  const { token, preview } = req.query;
+  const { id, photoId } = req.params;
+
+  Photo.downloadThumbnailPhoto(id, photoId, token, preview)
+    .then(photo => photo.getThumbnailFromAzure())
+    .then((url) => {
+      res.redirect(url);
+      res.end();
+    })
+    .catch((err) => {
+      res.json(err);
+      res.end();
+    });
+});
+
+/**
  * DELETE endpoint.
  * This endpoint deletes a photo.
  */
@@ -231,11 +251,12 @@ router.post('/:id/photos', upload.array('image'), (req, res) => {
     return newPhoto.addToAzure(file)
       .then(() => newPhoto.save())
       .then((newestPhoto) => {
-        newestPhoto.path = `${newestPhoto.path}${newestPhoto._id.toString()}`;
+        newestPhoto.path = `${newestPhoto.path}${newestPhoto.id}`;
+        newestPhoto.thumbnail = `${newestPhoto.thumbnail}${newestPhoto.id}`;
         return newestPhoto.save();
       })
       .then(finish => resolve(finish))
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         reject(err);
       });

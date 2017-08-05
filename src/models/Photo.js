@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import azure from 'azure-storage';
+import sharp from 'sharp';
 import errorMessages from '../constants/errorMessages';
 import Group from './Group';
 
@@ -20,6 +21,10 @@ const Schema = new mongoose.Schema({
     type: String,
     required: errorMessages.REQUIRED_ERROR,
   },
+  thumbnailBlobName: {
+    type: String,
+    required: errorMessages.REQUIRED_ERROR,
+  },
   fileType: {
     type: String,
   },
@@ -27,6 +32,10 @@ const Schema = new mongoose.Schema({
     type: String,
   },
   path: {
+    type: String,
+    required: errorMessages.REQUIRED_ERROR,
+  },
+  thumbnail: {
     type: String,
     required: errorMessages.REQUIRED_ERROR,
   },
@@ -53,32 +62,39 @@ Schema.methods.addToAzure = function addToAzure(file) {
     const fileExtension = file.mimetype.replace('image/', '');
     this.fileExtension = fileExtension;
     const fileName = `${this.id}.${fileExtension}`;
-    // ToDo: Check fileType.
     const blobService = azure.createBlobService();
     // Create group container.
     blobService.createContainerIfNotExists(this.group.toString(), (error, result, response) => {
       if(!error) {
-        // Create thumbnail
-        blobService.createBlockBlobFromText(this.group.toString(), `Thumbnail/${fileName}`, file.buffer, (bloberror, blobresult, blobresponse) => {
-          if(!bloberror) {
-            this.path = `https://steps-upload.herokuapp.com/api/group/${this.group.toString()}/photos/`;
-            this.blobName = blobresult.name;
-            resolve();
-          } else {
-            reject(bloberror);
-          }
-        });
-
-        // Create default image
-        blobService.createBlockBlobFromText(this.group.toString(), `Default/${fileName}`, file.buffer, (bloberror, blobresult, blobresponse) => {
-          if(!bloberror) {
-            this.path = `https://steps-upload.herokuapp.com/api/group/${this.group.toString()}/photos/`;
-            this.blobName = blobresult.name;
-            resolve();
-          } else {
-            reject(bloberror);
-          }
-        });
+        sharp(file.buffer)
+          .resize(320, 320, {
+            kernel: sharp.kernel.lanczos2,
+            interpolator: sharp.interpolator.nohalo,
+          })
+          .background({ r: 0, g: 0, b: 0, alpha: 0 })
+          .embed()
+          .toBuffer()
+          .then((data) => {
+            // Create thumbnail
+            blobService.createBlockBlobFromText(this.group.toString(), `Thumbnail/${fileName}`, data, (bloberror, blobresult, blobresponse) => {
+              if(!bloberror) {
+                this.thumbnail = `http://localhost:3000/api/group/${this.group.toString()}/photos/thumbnail/`;
+                this.thumbnailBlobName = blobresult.name;
+                // Create default image
+                blobService.createBlockBlobFromText(this.group.toString(), `Default/${fileName}`, file.buffer, (blobErrorDefault, blobResultDefault, blobresponsedefault) => {
+                  if(!blobErrorDefault) {
+                    this.path = `http://localhost:3000/api/group/${this.group.toString()}/photos/`;
+                    this.blobName = blobResultDefault.name;
+                    resolve();
+                  } else {
+                    reject(blobErrorDefault);
+                  }
+                });
+              } else {
+                reject(bloberror);
+              }
+            });
+          });
       } else {
         reject(error);
       }
@@ -89,13 +105,29 @@ Schema.methods.addToAzure = function addToAzure(file) {
 Schema.methods.getUrlFromAzure = function getUrlFromAzure() {
   return new Promise((resolve, reject) => {
     const blobService = azure.createBlobService();
-    const sasToken = blobService.generateSharedAccessSignature(this.group.toString(), this.blobName, { AccessPolicy: {
+    const groupId = this.group.toString();
+    const sasToken = blobService.generateSharedAccessSignature(groupId, this.blobName, { AccessPolicy: {
       Expiry: azure.date.minutesFromNow(60),
       Permissions: azure.BlobUtilities.SharedAccessPermissions.READ,
     } }, {
       contentType: this.fileType,
     });
-    const url = blobService.getUrl(this.group.toString(), this.blobName, sasToken, 'https://steps.blob.core.windows.net');
+    const url = blobService.getUrl(groupId, this.blobName, sasToken, 'https://steps.blob.core.windows.net');
+    return resolve(url);
+  });
+};
+
+Schema.methods.getThumbnailFromAzure = function getThumbnailFromAzure() {
+  return new Promise((resolve, reject) => {
+    const blobService = azure.createBlobService();
+    const groupId = this.group.toString();
+    const sasToken = blobService.generateSharedAccessSignature(groupId, this.thumbnailBlobName, { AccessPolicy: {
+      Expiry: azure.date.minutesFromNow(60),
+      Permissions: azure.BlobUtilities.SharedAccessPermissions.READ,
+    } }, {
+      contentType: this.fileType,
+    });
+    const url = blobService.getUrl(groupId, this.thumbnailBlobName, sasToken, 'https://steps.blob.core.windows.net');
     return resolve(url);
   });
 };
@@ -119,6 +151,13 @@ Schema.statics.downloadPhoto = function downloadPhoto(groupId, photoId, token, p
       }
       return photo.save();
     })
+    .then(photo => resolve(photo))
+    .catch(err => reject(err)));
+};
+
+Schema.statics.downloadThumbnailPhoto = function downloadThumbnailPhoto(groupId, photoId, token) {
+  return new Promise((resolve, reject) => Group.getGroupWithToken(groupId, token)
+    .then(() => this.getPhotoWithGroup(photoId, groupId))
     .then(photo => resolve(photo))
     .catch(err => reject(err)));
 };
