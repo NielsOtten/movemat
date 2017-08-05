@@ -235,13 +235,17 @@ router.post('/:id/photos', upload.array('image'), (req, res) => {
         return newestPhoto.save();
       })
       .then(finish => resolve(finish))
-      .catch(err => reject(err));
+      .catch(err => {
+        console.log(err);
+        reject(err);
+      });
   })))
     .then((data) => {
       res.json({ newPhotos: data });
       res.end();
     })
     .catch((err) => {
+      console.log(err);
       res.json(err);
       res.end();
     });

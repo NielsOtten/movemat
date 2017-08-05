@@ -23,6 +23,9 @@ const Schema = new mongoose.Schema({
   fileType: {
     type: String,
   },
+  fileExtension: {
+    type: String,
+  },
   path: {
     type: String,
     required: errorMessages.REQUIRED_ERROR,
@@ -43,12 +46,31 @@ const Schema = new mongoose.Schema({
 
 Schema.methods.addToAzure = function addToAzure(file) {
   return new Promise((resolve, reject) => {
-    const fileName = file.originalname;
+    const allowedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if(!allowedFileTypes.includes(file.mimetype)) {
+      reject('Wrong filetype');
+    }
+    const fileExtension = file.mimetype.replace('image/', '');
+    this.fileExtension = fileExtension;
+    const fileName = `${this.id}.${fileExtension}`;
     // ToDo: Check fileType.
     const blobService = azure.createBlobService();
+    // Create group container.
     blobService.createContainerIfNotExists(this.group.toString(), (error, result, response) => {
       if(!error) {
-        blobService.createBlockBlobFromText(this.group.toString(), fileName, file.buffer, (bloberror, blobresult, blobresponse) => {
+        // Create thumbnail
+        blobService.createBlockBlobFromText(this.group.toString(), `Thumbnail/${fileName}`, file.buffer, (bloberror, blobresult, blobresponse) => {
+          if(!bloberror) {
+            this.path = `https://steps-upload.herokuapp.com/api/group/${this.group.toString()}/photos/`;
+            this.blobName = blobresult.name;
+            resolve();
+          } else {
+            reject(bloberror);
+          }
+        });
+
+        // Create default image
+        blobService.createBlockBlobFromText(this.group.toString(), `Default/${fileName}`, file.buffer, (bloberror, blobresult, blobresponse) => {
           if(!bloberror) {
             this.path = `https://steps-upload.herokuapp.com/api/group/${this.group.toString()}/photos/`;
             this.blobName = blobresult.name;
