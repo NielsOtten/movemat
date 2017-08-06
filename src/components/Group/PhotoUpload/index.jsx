@@ -41,16 +41,6 @@ class PhotoUpload extends Component {
         >
           <h2>Klik hier om bestanden te uploaden of sleep de bestanden hierop.</h2>
         </Dropzone>
-        <section className={styles.photos}>
-          {this.state.newPhotos.map(photo => <Photo
-            key={photo.name + photo.lastModified}
-            id={photo._id}
-            thumbnail={`${photo.thumbnail}?preview=1`}
-            photo={`${photo.path}?preview=1`}
-            title={photo.name}
-            groupApi={this.props.groupApi}
-          />)}
-        </section>
       </div>
     );
   }
