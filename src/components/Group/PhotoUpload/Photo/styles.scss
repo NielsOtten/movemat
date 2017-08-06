@@ -77,10 +77,11 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80%;
+  width: 100%;
+  max-width: 1080px;
+  max-height: 600px;
   height: 100%;
   z-index: 999;
-  max-height: 80%;
 
   img {
     height: auto;
@@ -118,4 +119,5 @@
   bottom: 10px;
   overflow: hidden;
   border-radius: 5px;
+  cursor: zoom-in;
 }
