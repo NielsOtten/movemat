@@ -57,7 +57,8 @@ class Group extends Component {
           {this.uploadedPhotos.map(photo => <Photo
             key={photo._id}
             id={photo._id}
-            preview={`${photo.thumbnail}?preview=1`}
+            thumbnail={`${photo.thumbnail}?preview=1`}
+            photo={`${photo.path}?preview=1`}
             title={photo.name}
             groupApi={this.props.groupApi}
           />)}

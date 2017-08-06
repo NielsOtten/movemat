@@ -8,6 +8,10 @@ class Photo extends Component {
   constructor(props) {
     super(props);
     this.groupApi = props.groupApi;
+
+    this.state = {
+      open: false,
+    };
   }
 
   onDeleteHandler = () => {
@@ -37,21 +41,34 @@ class Photo extends Component {
     });
   };
 
+  showBigPhoto = () => {
+    this.setState({
+      open: !this.state.open,
+    });
+  };
+
   render() {
+    const open = this.state.open ? styles.visible : '';
     return (
       <div className={styles.photo}>
-        <div className={styles.innerBox}>
-          <img src={this.props.preview} alt={this.props.title} />
+        <div className={styles.innerBox} onClick={this.showBigPhoto}>
+          <img src={this.props.thumbnail} alt={this.props.title} />
         </div>
         <button onClick={this.onDeleteHandler}><SVG src='bin' /></button>
         <h3>{this.props.title}</h3>
+        <div className={[styles.overlayBigPhoto, open].join(' ')} onClick={this.showBigPhoto}>
+          <div className={styles.bigPhoto} onClick={(e) => { e.preventDefault(); }}>
+            <img src={this.props.photo} alt={this.props.title} />
+          </div>
+        </div>
       </div>
     );
   }
 }
 
 Photo.propTypes = {
-  preview: PropTypes.string.isRequired,
+  thumbnail: PropTypes.string.isRequired,
+  photo: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
 };
 
