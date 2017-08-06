@@ -1,6 +1,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Popup from 'react-popup';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import MenuComponent from './Menu';
 import styles from './styles.scss';
@@ -27,6 +28,7 @@ class App extends Component {
         <MenuComponent />
         <MuiThemeProvider>
           <div className={styles.content}>
+            <Popup />
             {this.renderChildren()}
           </div>
         </MuiThemeProvider>
