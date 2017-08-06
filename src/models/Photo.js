@@ -78,12 +78,12 @@ Schema.methods.addToAzure = function addToAzure(file) {
             // Create thumbnail
             blobService.createBlockBlobFromText(this.group.toString(), `Thumbnail/${fileName}`, data, (bloberror, blobresult, blobresponse) => {
               if(!bloberror) {
-                this.thumbnail = `http://localhost:3000/api/group/${this.group.toString()}/photos/thumbnail/`;
+                this.thumbnail = `https://steps-upload.herokuapp.com/api/group/${this.group.toString()}/photos/thumbnail/`;
                 this.thumbnailBlobName = blobresult.name;
                 // Create default image
                 blobService.createBlockBlobFromText(this.group.toString(), `Default/${fileName}`, file.buffer, (blobErrorDefault, blobResultDefault, blobresponsedefault) => {
                   if(!blobErrorDefault) {
-                    this.path = `http://localhost:3000/api/group/${this.group.toString()}/photos/`;
+                    this.path = `https://steps-upload.herokuapp.com/api/group/${this.group.toString()}/photos/`;
                     this.blobName = blobResultDefault.name;
                     resolve();
                   } else {
