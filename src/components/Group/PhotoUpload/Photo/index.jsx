@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Popup from 'react-popup';
 import PropTypes from 'prop-types';
 import styles from './styles.scss';
 import SVG from '../../../common/SVG';
@@ -14,33 +13,6 @@ class Photo extends Component {
     };
   }
 
-  onDeleteHandler = () => {
-    Popup.create({
-      title: null,
-      content: 'Weet je zeker dat je deze foto wilt verwijderen?',
-      buttons: {
-        left: [{
-          text: 'Nee',
-          className: 'danger',
-          action() {
-            Popup.close();
-          },
-        }],
-        right: [{
-          text: 'Ja',
-          className: 'success',
-          action() {
-            this.groupApi.deletePhoto(this.props.id)
-              .then((data) => {
-                console.log(data);
-              });
-            Popup.close();
-          },
-        }],
-      },
-    });
-  };
-
   showBigPhoto = () => {
     this.setState({
       open: !this.state.open,
@@ -54,7 +26,7 @@ class Photo extends Component {
         <div className={styles.innerBox} onClick={this.showBigPhoto}>
           <img src={this.props.thumbnail} alt={this.props.title} />
         </div>
-        <button onClick={this.onDeleteHandler}><SVG src='bin' /></button>
+        <button onClick={() => { this.props.deleteHandler(this); }}><SVG src='bin' /></button>
         <h3>{this.props.title}</h3>
         <div className={[styles.overlayBigPhoto, open].join(' ')} onClick={this.showBigPhoto}>
           <div className={styles.bigPhoto} onClick={(e) => { e.preventDefault(); }}>

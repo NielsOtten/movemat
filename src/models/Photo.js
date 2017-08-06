@@ -165,7 +165,9 @@ Schema.statics.downloadThumbnailPhoto = function downloadThumbnailPhoto(groupId,
 Schema.statics.getNewPhotos = function getNewPhotos(group) {
   return new Promise((resolve, reject) => {
     if(group === null) reject({ message: 'Combination Token + Group is undefined.' });
-    this.find({ group: group._id, downloaded: false, deleted: false }).sort({ timestamp: 'asc' }).exec()
+    this.find({ group: group._id, downloaded: false, deleted: false })
+      .sort({ timestamp: 'desc' })
+      .exec()
       .then(photos => resolve(photos))
       .catch(err => reject(err));
   });
@@ -174,7 +176,7 @@ Schema.statics.getNewPhotos = function getNewPhotos(group) {
 Schema.statics.getDownloadedPhotos = function getDownloadedPhotos(group) {
   return new Promise((resolve, reject) =>
      this.find({ group: group._id, downloaded: true, deleted: false })
-      .sort({ timestamp: 'asc' })
+      .sort({ timestamp: 'desc' })
       .exec()
       .then(photos => resolve(photos))
       .catch(err => reject(err)));
@@ -191,8 +193,8 @@ Schema.statics.getDeletedPhotos = function getDeletedPhotos(group) {
 
 Schema.statics.getPhotos = function getPhotos(group) {
   return new Promise((resolve, reject) =>
-    this.find({ group: group._id })
-      .sort({ timestamp: 'asc' })
+    this.find({ group: group._id, deleted: false })
+      .sort({ timestamp: 'desc' })
       .exec()
       .then(photos => resolve(photos))
       .catch(err => reject(err)));

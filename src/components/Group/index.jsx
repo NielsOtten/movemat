@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { observable } from 'mobx';
+import { observable, action } from 'mobx';
+import Popup from 'react-popup';
 import { observer } from 'mobx-react';
 import Photo from './PhotoUpload/Photo';
 import GroupApi from '../../api';
@@ -27,6 +28,35 @@ class Group extends Component {
     this.GroupAPI.addUser();
   }
 
+  onDeleteHandler = (photo) => {
+    const group = this;
+    Popup.create({
+      title: null,
+      content: 'Weet je zeker dat je deze foto wilt verwijderen?',
+      buttons: {
+        left: [{
+          text: 'Nee',
+          className: 'danger',
+          action() {
+            Popup.close();
+          },
+        }],
+        right: [{
+          text: 'Ja',
+          className: 'success',
+          action() {
+            photo.groupApi.deletePhoto(photo.props.id)
+              .then((
+              ) => {
+                group.getPhotos();
+              });
+            Popup.close();
+          },
+        }],
+      },
+    });
+  };
+
   getPhotos = () => {
     this.GroupAPI.getPhotos()
     .then((uploadedPhotos) => {
@@ -52,7 +82,7 @@ class Group extends Component {
         <form onSubmit={this.onSumbitHandler}>
           <input type='submit' />
         </form>
-        <PhotoUpload groupApi={this.GroupAPI} groupId={this.props.params.id}/>
+        <PhotoUpload groupApi={this.GroupAPI} groupId={this.props.params.id} changeHandler={this.getPhotos} />
         <div className={styles.photos}>
           {this.uploadedPhotos.map(photo => <Photo
             key={photo._id}
@@ -60,7 +90,8 @@ class Group extends Component {
             thumbnail={`${photo.thumbnail}?preview=1`}
             photo={`${photo.path}?preview=1`}
             title={photo.name}
-            groupApi={this.props.groupApi}
+            groupApi={this.GroupAPI}
+            deleteHandler={this.onDeleteHandler}
           />)}
         </div>
       </div>

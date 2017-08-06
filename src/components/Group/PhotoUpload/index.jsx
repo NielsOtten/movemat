@@ -14,11 +14,6 @@ class PhotoUpload extends Component {
     this.submitHandler = this.submitHandler.bind(this);
   }
 
-  state = {
-    uploadedPhotos: [],
-    newPhotos: [],
-  };
-
   changeHandler(uploadedPhotos) {
     const req = request.post(`/api/group/${this.props.groupId}/photos`);
     uploadedPhotos.forEach((file) => {
@@ -28,7 +23,7 @@ class PhotoUpload extends Component {
       if(err) {
         console.log(err);
       } else {
-        this.setState({ newPhotos: data.body.newPhotos });
+        this.props.changeHandler();
       }
     });
   }
@@ -50,7 +45,8 @@ class PhotoUpload extends Component {
           {this.state.newPhotos.map(photo => <Photo
             key={photo.name + photo.lastModified}
             id={photo._id}
-            preview={`${photo.thumbnail}?preview=1`}
+            thumbnail={`${photo.thumbnail}?preview=1`}
+            photo={`${photo.path}?preview=1`}
             title={photo.name}
             groupApi={this.props.groupApi}
           />)}
