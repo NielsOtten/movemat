@@ -20,7 +20,11 @@ class Photo extends Component {
   };
 
   render() {
-    const open = this.state.open ? styles.visible : '';
+    const bigPhoto = this.state.open ? <div className={styles.overlayBigPhoto} onClick={this.showBigPhoto}>
+      <div className={styles.bigPhoto} onClick={(e) => { e.preventDefault(); }}>
+        <img src={this.props.photo} alt={this.props.title} />
+      </div>
+    </div> : '';
     return (
       <div className={styles.photo}>
         <div className={styles.innerBox} onClick={this.showBigPhoto}>
@@ -28,11 +32,7 @@ class Photo extends Component {
         </div>
         <button onClick={() => { this.props.deleteHandler(this); }}><SVG src='bin' /></button>
         <h3>{this.props.title}</h3>
-        <div className={[styles.overlayBigPhoto, open].join(' ')} onClick={this.showBigPhoto}>
-          <div className={styles.bigPhoto} onClick={(e) => { e.preventDefault(); }}>
-            <img src={this.props.photo} alt={this.props.title} />
-          </div>
-        </div>
+        {bigPhoto}
       </div>
     );
   }
