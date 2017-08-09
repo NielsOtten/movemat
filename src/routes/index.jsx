@@ -54,7 +54,7 @@ const importAdminUser = (nextState, cb) => {
 // https://github.com/reactjs/react-router/blob/master/docs/guides/DynamicRouting.md
 const routes = (
   <Route>
-    <Route  path='/' component={App}>
+    <Route path='/' component={App}>
       <IndexRoute getComponent={importHome} />
       <Route path='login' getComponent={importLogin} />
       <Route path='signup' getComponent={importSignUp} />
