@@ -50,7 +50,7 @@ Schema.statics.getGroup = function getGroup(user, id) {
 
 Schema.statics.getGroups = function getGroups(user) {
   return new Promise((resolve, reject) => {
-    this.find({ users: { $in: [user] } })
+    this.find({ $or: [{ users: { $in: [user] } }, { allowedEmails: { $in: [user.email.toString()] } }] })
       .then(groups => resolve(groups))
       .catch(err => reject(err));
   });

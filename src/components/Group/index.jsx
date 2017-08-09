@@ -15,7 +15,6 @@ class Group extends Component {
   constructor(props) {
     super(props);
     this.GroupAPI = new GroupApi(props.params.id);
-    this.onSumbitHandler = this.onSumbitHandler.bind(this);
     this.getToken = this.getToken.bind(this);
   }
 

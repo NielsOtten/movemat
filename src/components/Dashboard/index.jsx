@@ -14,8 +14,12 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.GroupAPI.getGroups()
-      .then(groups => {
-        this.setState({ groups });
+      .then((groups) => {
+        if(groups.length > 1) {
+          this.setState({ groups });
+        } else {
+          window.location.href = `/familie/${groups[0]._id}`;
+        }
       })
       .catch((err) => {
         console.log(err);
