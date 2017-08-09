@@ -42,7 +42,7 @@ const Schema = new mongoose.Schema({
 
 Schema.statics.getGroup = function getGroup(user, id) {
   return new Promise((resolve, reject) => {
-    this.findOne({ _id: id, users: { $in: [user] } })
+    this.findOne({ _id: id, $or: [{ users: { $in: [user] } }, { allowedEmails: { $in: [user.email.toString()] } }] })
       .then(group => resolve(group))
       .catch(err => reject(err));
   });
