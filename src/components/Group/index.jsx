@@ -23,11 +23,6 @@ class Group extends Component {
     this.getPhotos();
   }
 
-  onSumbitHandler(e) {
-    e.preventDefault();
-    this.GroupAPI.addUser();
-  }
-
   onDeleteHandler = (photo) => {
     const group = this;
     Popup.create({
@@ -79,9 +74,6 @@ class Group extends Component {
   render() {
     return (
       <div>
-        <form onSubmit={this.onSumbitHandler}>
-          <input type='submit' />
-        </form>
         <PhotoUpload groupApi={this.GroupAPI} groupId={this.props.params.id} changeHandler={this.getPhotos} />
         <div className={styles.photos}>
           {this.uploadedPhotos.map(photo => <Photo
