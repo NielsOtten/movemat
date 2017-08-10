@@ -23,9 +23,9 @@ class BaseController {
     return this.model
       .findOne({ _id: id })
       .then((modelInstance) => {
-        data.forEach((attribute) => {
-          if(Object.prototype.hasOwnProperty.call(data, attribute) && attribute !== '_id') {
-            modelInstance[attribute] = data[attribute];
+        Object.keys(data).forEach((key) => {
+          if(modelInstance[key] && key !== '_id') {
+            modelInstance[key] = data[key];
           }
         });
 
@@ -56,6 +56,11 @@ class BaseController {
         .then((list) => {
           res.json(list);
           res.end();
+        })
+        .catch((err) => {
+          res.status(401);
+          res.json(err);
+          res.end();
         });
     });
 
@@ -64,6 +69,11 @@ class BaseController {
         .create(req.body)
         .then((newInstance) => {
           res.json(newInstance);
+          res.end();
+        })
+        .catch((err) => {
+          res.status(401);
+          res.json(err);
           res.end();
         });
     });
@@ -74,6 +84,11 @@ class BaseController {
         .then((newInstance) => {
           res.json(newInstance);
           res.end();
+        })
+        .catch((err) => {
+          res.status(401);
+          res.json(err);
+          res.end();
         });
     });
 
@@ -83,6 +98,12 @@ class BaseController {
         .then((newInstance) => {
           res.json(newInstance);
           res.end();
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(401);
+          res.json(err);
+          res.end();
         });
     });
 
@@ -90,6 +111,11 @@ class BaseController {
       this
         .delete(req.params.id)
         .then(() => {
+          res.end();
+        })
+        .catch((err) => {
+          res.status(401);
+          res.json(err);
           res.end();
         });
     });

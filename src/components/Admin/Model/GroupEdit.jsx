@@ -26,22 +26,66 @@ class GroupEdit extends Component {
       });
   }
 
+  submitHandler = (e) => {
+    e.preventDefault();
+    const obj = {};
+    if(this.name && this.name.length > 0) {
+      obj.name = this.name;
+    }
+    if(this.email && this.email.length > 0) {
+      obj.allowedEmails = this.email.trim().split(',');
+    }
+    const body = JSON.stringify(obj);
+    fetch(`/api/admin/group/${this.props.routeParams.id}`, {
+      mode: 'cors',
+      credentials: 'same-origin',
+      headers: {
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+      method: 'PUT',
+      body,
+    })
+      .then(() => {
+        this.getGroup();
+      });
+  };
+
   @observable group = {};
+  @observable name = '';
+  @observable email = [];
 
   render() {
-    console.log(this.group.name);
+    const name = this.group.name ? this.group.name : '';
+    const id = this.group.id ? this.group.id : '';
+    const token = this.group.token ? this.group.token : '';
+    const allowedEmails = this.group.allowedEmails ? this.group.allowedEmails.map(email => <li key={email}>{email}</li>) : '';
     return (
-      <form>
-        <TextField
-          hintText='Name'
-          defaultValue={this.group.name === 'undefined' ? this.group.name : 'a'}
-        /><br />
-        <TextField
-          hintText='Allowed emails (Met comma)'
-          defaultValue={this.group.name ? this.group.name : 'a'}
-        /><br />
-        <RaisedButton type='submit' label='edit' />
-      </form>
+      <div>
+        <div>
+          <p>id: {id}</p>
+          <p>Naam: {name}</p>
+          <p>Allowed emails:</p>
+          <ul>
+            {allowedEmails}
+          </ul>
+          <p>Token: {token}</p>
+        </div>
+        <form onSubmit={this.submitHandler}>
+          <TextField
+            name='name'
+            hintText='Name'
+            onChange={(e, v) => { this.name = v; }}
+
+          /><br />
+          <TextField
+            name='allowedEmail'
+            hintText='Allowed emails (Met comma)'
+            onChange={(e, v) => { this.email = v; }}
+          /><br />
+          <RaisedButton type='submit' label='edit' />
+        </form>
+      </div>
     );
   }
 }
