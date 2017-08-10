@@ -36,7 +36,7 @@ class BaseController {
 
   delete(id) {
     return this.model
-      .remove({ _id: id})
+      .remove({ _id: id })
       .then(() => ({}));
   }
 
@@ -44,11 +44,7 @@ class BaseController {
     return this.model
       .find({})
       .populate(['users'])
-      .then((modelInstances) => {
-        const response = {};
-        response[this.modelName] = modelInstances;
-        return response;
-      });
+      .then(modelInstances => modelInstances);
   }
 
   route() {
