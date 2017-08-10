@@ -7,24 +7,9 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 
 @observer
-class UserEdit extends Component {
+class UserNew extends Component {
   constructor(props) {
     super(props);
-  }
-
-  componentDidMount() {
-    this.getUser();
-  }
-
-  getUser() {
-    fetch(`/api/admin/user/${this.props.routeParams.id}`, {
-      credentials: 'same-origin',
-      method: 'GET',
-    })
-      .then(res => res.json())
-      .then((json) => {
-        this.user = json;
-      });
   }
 
   submitHandler = (e) => {
@@ -40,38 +25,28 @@ class UserEdit extends Component {
       obj.password = this.password;
     }
     const body = JSON.stringify(obj);
-    fetch(`/api/admin/user/${this.props.routeParams.id}`, {
+    fetch('/api/admin/user', {
       mode: 'cors',
       credentials: 'same-origin',
       headers: {
         Accept: 'application/json',
         'Content-type': 'application/json',
       },
-      method: 'PUT',
+      method: 'POST',
       body,
     })
       .then(() => {
-        this.getUser();
-        Popup.alert('succesvol aangepast.');
+        Popup.alert('succesvol aangemaakt.');
       });
   };
 
-  @observable user = {};
   @observable name = '';
   @observable email = '';
   @observable password = '';
 
   render() {
-    const id = this.user._id ? this.user._id : '';
-    const name = this.user.username ? this.user.username : '';
-    const email = this.user.email ? this.user.email : '';
     return (
       <div>
-        <div>
-          <p>id: {id}</p>
-          <p>username: {name}</p>
-          <p>email: {email}</p>
-        </div>
         <form onSubmit={this.submitHandler}>
           <TextField
             name='name'
@@ -91,11 +66,11 @@ class UserEdit extends Component {
             onChange={(e, v) => { this.password = v; }}
 
           /><br />
-          <RaisedButton type='submit' label='edit' />
+          <RaisedButton type='submit' label='Nieuwe gebruiker' />
         </form>
       </div>
     );
   }
 }
 
-export default UserEdit;
+export default UserNew;

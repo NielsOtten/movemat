@@ -44,12 +44,6 @@ const importAdminGroup = (nextState, cb) => {
     .catch((e) => { throw e; });
 };
 
-const importAdminUser = (nextState, cb) => {
-  import('../components/Admin/User')
-    .then(module => cb(null, module.default))
-    .catch((e) => { throw e; });
-};
-
 const importAdminModelContainer = (nextState, cb) => {
   import('../components/Admin/Model/ModelContainer')
     .then(module => cb(null, module.default))
@@ -74,6 +68,12 @@ const importAdminUserEdit = (nextState, cb) => {
     .catch((e) => { throw e; });
 };
 
+const importAdminUsernew = (nextState, cb) => {
+  import('../components/Admin/Model/UserNew')
+    .then(module => cb(null, module.default))
+    .catch((e) => { throw e; });
+};
+
 // We use `getComponent` to dynamically load routes.
 // https://github.com/reactjs/react-router/blob/master/docs/guides/DynamicRouting.md
 const routes = (
@@ -89,7 +89,7 @@ const routes = (
       <IndexRoute getComponent={importAdminGroup} />
       <Route path=':id' getComponent={importAdminModelContainer} />
       <Route path='user/edit/:id' getComponent={importAdminUserEdit} />
-      <Route path='user/add' getComponent={importAdminUserEdit} />
+      <Route path='user/add' getComponent={importAdminUsernew} />
       <Route path='group/edit/:id' getComponent={importAdminGroupEdit} />
       <Route path='group/add' getComponent={importAdminGroupnew} />
     </Route>
