@@ -49,7 +49,7 @@ class ModelContainer extends Component {
           text: 'Ja',
           className: 'success',
           action() {
-            fetch(`/api/admin/group/${id}`, {
+            fetch(`/api/admin/${that.model}/${id}`, {
               credentials: 'same-origin',
               method: 'DELETE',
             }).then(res => res.json())
