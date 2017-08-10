@@ -10,7 +10,8 @@ import template from './template';
 import Auth from './config/passport';
 import GroupRoutes from '../routes/api/GroupRoutes';
 import UserRoutes from '../routes/api/UserRoutes';
-// import './envVariables';
+import AdminRoutes from '../routes/api/AdminRoutes';
+import './envVariables';
 
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = process.env.PORT || parseInt(KYT.SERVER_PORT, 10);
@@ -50,13 +51,14 @@ app.use(express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
 
 app.use('/api/group', GroupRoutes);
 app.use('/api/user', UserRoutes);
+app.use('/api/admin', AdminRoutes);
 
 // Setup server side routing.
 app.get('*', (req, res) => {
   const messages = [];
 // eslint-disable-next-line no-useless-escape
   const url = req.originalUrl.split('?').shift();
-  const allowed = ['', '/', '/login', '/signup', '/admin', '/api/user/isLoggedIn'].filter(allowedPath => url === allowedPath).length;
+  const allowed = ['', '/', '/login', '/signup', '/api/user/isLoggedIn', '/api/admin'].filter(allowedPath => url === allowedPath).length;
   if(allowed <= 0 && !req.user) {
     messages.push('Je moet ingelogd zijn om deze pagina te bekijken.');
     const redirectUri = req.url;
