@@ -37,7 +37,7 @@ class Menu extends Component {
 
     return (
       <header>
-        <div className={styles.logo}>Steps</div>
+        <div className={styles.logo}><img src={require('../../../images/StepsMMlogoLang.png')} alt='Logo' /></div>
         <ul className={styles.mainMenu}>
           <li className={styles.navItem}>
             <Link className={styles.link} to={homeLink} onClick={this.onClickHandler}>Home</Link>
