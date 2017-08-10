@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
+import { Link } from 'react-router';
 import { observable } from 'mobx';
 import Appbar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
@@ -33,8 +34,8 @@ class Header extends Component {
           docked={false}
           onRequestChange={open => this.drawerOpen = open}
         >
-          <MenuItem onTouchTap={this.drawerClose}>Gebruikers</MenuItem>
-          <MenuItem onTouchTap={this.drawerClose}>Familie</MenuItem>
+          <MenuItem onTouchTap={this.drawerClose}><Link to='/admin/user'>Gebruikers</Link></MenuItem>
+          <MenuItem onTouchTap={this.drawerClose}><Link to='/admin/group'>Families</Link></MenuItem>
         </Drawer>
       </div>
     );

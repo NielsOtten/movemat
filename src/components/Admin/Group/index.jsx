@@ -9,7 +9,6 @@ import {
   TableRow,
 } from 'material-ui/Table';
 import GroupTableRow from './GroupTableRow';
-import styles from './styles.scss';
 
 @observer
 class AdminGroup extends Component {
