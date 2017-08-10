@@ -62,6 +62,12 @@ const importAdminGroupEdit = (nextState, cb) => {
     .catch((e) => { throw e; });
 };
 
+const importAdminGroupnew = (nextState, cb) => {
+  import('../components/Admin/Model/GroupNew')
+    .then(module => cb(null, module.default))
+    .catch((e) => { throw e; });
+};
+
 const importAdminUserEdit = (nextState, cb) => {
   import('../components/Admin/Model/UserEdit')
     .then(module => cb(null, module.default))
@@ -85,7 +91,7 @@ const routes = (
       <Route path='user/edit/:id' getComponent={importAdminUserEdit} />
       <Route path='user/add' getComponent={importAdminUserEdit} />
       <Route path='group/edit/:id' getComponent={importAdminGroupEdit} />
-      <Route path='group/add' getComponent={importAdminGroupEdit} />
+      <Route path='group/add' getComponent={importAdminGroupnew} />
     </Route>
   </Route>
 );
