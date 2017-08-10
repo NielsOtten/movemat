@@ -8,35 +8,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import styles from './styles.scss';
 
 const deleteGroup = (id, name) => {
-  Popup.create({
-    title: null,
-    content: `Weet je zeker dat je ${name} (${id}) wilt verwijderen?` ,
-    buttons: {
-      left: [{
-        text: 'Nee',
-        className: 'danger',
-        action() {
-          Popup.close();
-        },
-      }],
-      right: [{
-        text: 'Ja',
-        className: 'success',
-        action() {
-          fetch(`/api/group/${id}`, {
-            credentials: 'same-origin',
-            method: 'DELETE',
-          }).then(res => res.json())
-            .then((data) => {
-              console.log('data', data);
-              return data;
-            })
-            .catch((err) => { console.log(err); });
-          Popup.close();
-        },
-      }],
-    },
-  });
 };
 
 const GroupTableRow = ({ id, name, allowedEmails, users, ...otherProps }) => (

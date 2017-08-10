@@ -11,7 +11,7 @@ import Auth from './config/passport';
 import GroupRoutes from '../routes/api/GroupRoutes';
 import UserRoutes from '../routes/api/UserRoutes';
 import AdminRoutes from '../routes/api/AdminRoutes';
-import './envVariables';
+// import './envVariables';
 
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = process.env.PORT || parseInt(KYT.SERVER_PORT, 10);

@@ -88,7 +88,7 @@ class BaseController {
 
     router.delete('/:id', (req, res) => {
       this
-        .update(req.params.id)
+        .delete(req.params.id)
         .then(() => {
           res.end();
         });

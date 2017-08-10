@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { observable } from 'mobx';
 import fetch from 'fetch-everywhere';
+import Popup from 'react-popup';
 import { observer } from 'mobx-react';
 import { Table, TableBody, TableHeader, TableRow, TableHeaderColumn, TableRowColumn } from 'material-ui/Table';
 import TableBodyRow from './TableBodyRow';
@@ -32,8 +33,38 @@ class ModelContainer extends Component {
   }
 
   deleteHandler = (id) => {
-    console.log(id);
-  }
+    const that = this;
+    Popup.create({
+      title: null,
+      content: `Weet je zeker dat je ${id} wilt verwijderen?` ,
+      buttons: {
+        left: [{
+          text: 'Nee',
+          className: 'danger',
+          action() {
+            Popup.close();
+          },
+        }],
+        right: [{
+          text: 'Ja',
+          className: 'success',
+          action() {
+            fetch(`/api/admin/group/${id}`, {
+              credentials: 'same-origin',
+              method: 'DELETE',
+            }).then(res => res.json())
+              .then((data) => {
+                console.log('data', data);
+                return data;
+              })
+              .catch((err) => { console.log(err); });
+            that.getModels();
+            Popup.close();
+          },
+        }],
+      },
+    });
+  };
 
   @observable models = [];
 
