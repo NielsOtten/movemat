@@ -40,63 +40,58 @@ const Schema = new mongoose.Schema({
   },
 });
 
-Schema.statics.getGroup = function getGroup(user, id) {
-  return new Promise((resolve, reject) => {
-    this.findOne({ _id: id, $or: [{ users: { $in: [user] } }, { allowedEmails: { $in: [user.email.toString()] } }] })
-      .then(group => resolve(group))
-      .catch(err => reject(err));
-  });
+Schema.statics.getGroup = async function getGroup(user, id) {
+  try {
+    return await this.findOne({
+      _id: id,
+      $or: [{ users: { $in: [user] } }, { allowedEmails: { $in: [user.email.toString()] } }],
+    });
+  } catch(exception) {
+    return exception;
+  }
 };
 
-Schema.statics.getGroups = function getGroups(user) {
-  return new Promise((resolve, reject) => {
-    this.find({ $or: [{ users: { $in: [user] } }, { allowedEmails: { $in: [user.email.toString()] } }] })
-      .then(groups => resolve(groups))
-      .catch(err => reject(err));
-  });
+Schema.statics.getGroups = async function getGroups(user) {
+  try {
+    return this.find({ $or: [{ users: { $in: [user] } }, { allowedEmails: { $in: [user.email.toString()] } }] });
+  } catch(exception) {
+    return exception;
+  }
 };
 
-Schema.statics.getGroupWithToken = function getGroupWithToken(id, token) {
-  return new Promise((resolve, reject) => {
-    this.findOne({ _id: id, token })
-      .then(group => resolve(group))
-      .catch(err => reject(err));
-  });
+Schema.statics.getGroupWithToken = async function getGroupWithToken(id, token) {
+  try {
+    return this.findOne({ _id: id, token });
+  } catch(exception) {
+    return exception;
+  }
 };
 
-Schema.statics.getUpdateQueue = function getUpdateQueue(id, token) {
-  let searchGroup = {};
-  let newPhotos = [];
-  let downloadedPhotos = [];
-  let deletedPhotos = [];
+Schema.statics.getUpdateQueue = async function getUpdateQueue(id, token) {
+  try {
+    const group = await this.getGroupWithToken(id, token);
+    const newPhotos = await Photo.getNewPhotos(group);
+    const downloadedPhotos = await Photo.getDownloadedPhotos(group);
+    const deletedPhotos = await Photo.getDeletedPhotos(group);
 
-  return new Promise((resolve, reject) => {
-    this.getGroupWithToken(id, token)
-      .then(group => searchGroup = group)
-      .then(() => Photo.getNewPhotos(searchGroup))
-      .then((photos) => {
-        newPhotos = photos;
-        return Photo.getDownloadedPhotos(searchGroup);
-      })
-      .then(loadedPhotos => downloadedPhotos = loadedPhotos)
-      .then(() => Photo.getDeletedPhotos(searchGroup))
-      .then(newDeletedPhotos => deletedPhotos = newDeletedPhotos)
-      .then(() => resolve({
-        deleted_photos: deletedPhotos,
-        updated_photos: newPhotos,
-        photos: downloadedPhotos,
-        group: searchGroup,
-      }))
-      .catch(err => reject(err));
-  });
+    return {
+      deleted_photos: deletedPhotos,
+      updated_photos: newPhotos,
+      photos: downloadedPhotos,
+      group,
+    };
+  } catch(exception) {
+    return exception;
+  }
 };
 
-Schema.statics.getToken = function getToken(user, id) {
-  return new Promise((resolve, reject) => {
-    this.getGroup(user, id)
-      .then(group => resolve(group.token))
-      .catch(err => reject(err));
-  });
+Schema.statics.getToken = async function getToken(user, id) {
+  try {
+    const group = this.getGroup(user, id);
+    return group.token ? group.token : null;
+  } catch(exception) {
+    return exception;
+  }
 };
 
 Schema.methods.hasUserAccess = function hasUserAccess(givenUser) {
