@@ -11,7 +11,6 @@ import Auth from './config/passport';
 import GroupRoutes from '../routes/api/GroupRoutes';
 import UserRoutes from '../routes/api/UserRoutes';
 import AdminRoutes from '../routes/api/AdminRoutes';
-// import './envVariables';
 
 const clientAssets = require(KYT.ASSETS_MANIFEST); // eslint-disable-line import/no-dynamic-require
 const port = process.env.PORT || parseInt(KYT.SERVER_PORT, 10);
@@ -53,19 +52,16 @@ app.use('/api/group', GroupRoutes);
 app.use('/api/user', UserRoutes);
 app.use('/api/admin', AdminRoutes);
 
+// Check if allowed or logged in
+app.use(({ path: reqPath, url, user }, res, next) => {
+  if(!user && !['/', '/login', '/signup', '/api/user/isLoggedIn'].includes(reqPath)) {
+    return res.redirect(`/login?redirectUri=${encodeURIComponent(url)}`);
+  }
+  return next();
+});
+
 // Setup server side routing.
 app.get('*', (req, res) => {
-  const messages = [];
-// eslint-disable-next-line no-useless-escape
-  const url = req.originalUrl.split('?').shift();
-  const allowed = ['', '/', '/login', '/signup', '/api/user/isLoggedIn', '/api/admin'].filter(allowedPath => url === allowedPath).length;
-  if(allowed <= 0 && !req.user) {
-    messages.push('Je moet ingelogd zijn om deze pagina te bekijken.');
-    const redirectUri = req.url;
-    res.redirect(`/login?redirectUri=${redirectUri}&messages=${messages}`);
-    return res.end();
-  }
-
   const errors = req.flash('errors');
   return res.status(200).send(template({
     jsBundle: clientAssets.main.js,
