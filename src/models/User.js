@@ -26,6 +26,12 @@ const Schema = mongoose.Schema({
     },
     unique: errorMessages.UNIQUE_ERROR,
   },
+  role: {
+    type: String,
+    lowercase: true,
+    required: `Role ${errorMessages.REQUIRED_ERROR}`,
+    default: 'anonymous_user',
+  },
   username: {
     type: String,
     required: `Gebruikersnaam ${errorMessages.REQUIRED_ERROR}.`,
@@ -58,7 +64,7 @@ Schema.pre('save', function (next) {
 
       // override the cleartext password with the hashed one.
       user.password = hash;
-      next();
+      return next();
     });
   });
 });
@@ -68,12 +74,12 @@ Schema.methods.comparePassword = function comparePassword(password) {
   return bcrypt.compare(password, this.password);
 };
 
-Schema.methods.getUserByEmail = function getUserByEmail(email) {
-  return Promise((resolve, reject) => {
-    this.findOne({ email })
-      .then(user => resolve(user))
-      .catch(() => reject());
-  });
+Schema.methods.getUserByEmail = async function getUserByEmail(email) {
+  try {
+    return this.findOne({ email });
+  } catch(exception) {
+    return exception;
+  }
 };
 
 Schema.plugin(uniqueValidator);

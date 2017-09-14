@@ -20,11 +20,9 @@ class BaseController {
   }
 
   update(id, data) {
-    console.log(id);
     return this.model
       .findOne({ _id: id })
       .then((modelInstance) => {
-        console.log(modelInstance);
         Object.keys(data).forEach((key) => {
           if(modelInstance[key] && key !== '_id') {
             modelInstance[key] = data[key];

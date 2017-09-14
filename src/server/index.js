@@ -48,9 +48,14 @@ auth.initialize();
 // Setup the public directory so that we can server static assets.
 app.use(express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
 
+const adminProtected = ({ user }, res, next) => {
+  if(!user || user.role !== 'admin') { return res.redirect('/login'); }
+  return next();
+};
+
 app.use('/api/group', GroupRoutes);
 app.use('/api/user', UserRoutes);
-app.use('/api/admin', AdminRoutes);
+app.use('/api/admin', adminProtected, AdminRoutes);
 
 // Check if allowed or logged in
 app.use(({ path: reqPath, url, user }, res, next) => {
