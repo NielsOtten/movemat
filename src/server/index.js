@@ -65,6 +65,15 @@ app.use(({ path: reqPath, url, user }, res, next) => {
   return next();
 });
 
+app.get('/admin', adminProtected, (req, res) => {
+  const errors = req.flash('errors');
+  return res.status(200).send(template({
+    jsBundle: clientAssets.main.js,
+    cssBundle: clientAssets.main.css,
+    errors,
+  }));
+});
+
 // Setup server side routing.
 app.get('*', (req, res) => {
   const errors = req.flash('errors');

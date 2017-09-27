@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action } from 'mobx';
+import { observable } from 'mobx';
 import Popup from 'react-popup';
 import { observer } from 'mobx-react';
 import Photo from './PhotoUpload/Photo';
