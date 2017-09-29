@@ -1,4 +1,19 @@
 {
-  "presets": ["kyt-react", "stage-1"],
-  "plugins": ["transform-flow-strip-types", "transform-decorators-legacy"]
+  "presets": ["kyt-react"],
+  "env": {
+    "development": {
+      "plugins": [
+        "transform-decorators-legacy",
+        "transform-object-rest-spread",
+        "syntax-object-rest-spread"
+      ]
+    },
+    "production": {
+      "plugins": [
+        "transform-object-rest-spread",
+        "syntax-object-rest-spread",
+        "transform-react-remove-prop-types"
+      ]
+    }
+  }
 }

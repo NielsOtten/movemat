@@ -1,44 +1,28 @@
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Popup from 'react-popup';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import MenuComponent from './Menu';
-import styles from './styles.scss';
-import PassportErrorsStore from '../../client/stores/PassportErrorsStore';
+import Login from '../../scenes/Login';
+import NotFound from '../../scenes/NotFound';
+import SignUp from '../../scenes/SignUp';
+import Group from '../../scenes/Group';
+import Dashboard from '../../scenes/Dashboard';
+import AccessDenied from '../../scenes/AccessDenied';
+import AuthenticatedRoute from '../Routes/AuthenticatedRoute';
 
-class App extends Component {
-  static getErrors(errors) {
-    PassportErrorsStore.errors = errors.map(error => ({ key: Object.keys(error)[0], message: Object.values(error)[0].message }));
-  }
-
-  componentDidMount() {
-    App.getErrors(__passportErrors);
-  }
-
-  renderChildren() {
-    return React.Children.map(this.props.children, child => React.cloneElement(child, {
-      passportErrorsStore: PassportErrorsStore,
-    }));
-  }
-
-  render() {
-    return (
-      <div>
-        <MenuComponent />
-        <MuiThemeProvider>
-          <div className={styles.content}>
-            <Popup />
-            {this.renderChildren()}
-          </div>
-        </MuiThemeProvider>
-      </div>
-    );
-  }
-}
-
-App.propTypes = {
-  children: PropTypes.node.isRequired,
-};
+const App = appProps => (
+  <Router>
+    <Switch>
+      <Redirect exact from='/' to='/login' />
+      <Route path='/login' component={Login} {...appProps} />
+      <Route path='/herstel-wachtwoord' component={Login} />
+      <Route path='/reset-wachtwoord/:token' component={Login} />
+      <Route path='/registreer' component={SignUp} {...appProps} />
+      <Route path='/dashboard' component={Dashboard} {...appProps} />
+      <AuthenticatedRoute path='/familie/:_id' component={Group} {...appProps} />
+      <Route path='/geen-toegang' component={AccessDenied} {...appProps} />
+      <Route component={NotFound} {...appProps} />
+    </Switch>
+  </Router>
+);
 
 export default App;

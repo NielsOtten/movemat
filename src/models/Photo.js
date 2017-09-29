@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import azure from 'azure-storage';
 import sharp from 'sharp';
-import errorMessages from '../constants/errorMessages';
+import errorMessages from '../services/constants/errorMessages';
 import Group from './Group';
 
 const Schema = new mongoose.Schema({

@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
 import { isEmail } from 'validator';
-import errorMessages from '../constants/errorMessages';
-import { generateRandomString } from '../utils';
+import errorMessages from '../services/constants/errorMessages';
+import { generateRandomString } from '../services/utils';
 import User from './User';
 import Photo from './Photo';
 

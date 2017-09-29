@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { isEmail } from 'validator';
 import uniqueValidator from 'mongoose-unique-validator';
 
-import errorMessages from '../constants/errorMessages';
+import errorMessages from '../services/constants/errorMessages';
 
 // Salt work factor for BCrypt
 const SALT_WORK_FACTOR = 10;

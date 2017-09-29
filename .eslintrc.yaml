@@ -1,4 +1,4 @@
-extends: airbnb
+extends: eslint-config-kyt
 rules:
   keyword-spacing:
     - 2
@@ -39,7 +39,7 @@ rules:
     - 2
     - prefer-single
   no-return-assign:
-    - 0
+    - 1
   no-console:
     - 2
     -
@@ -47,14 +47,10 @@ rules:
         - "warn"
         - "error"
         - "info"
-  no-bitwise: 0
-  no-underscore-dangle: 0
   react/no-did-mount-set-state: 0
 
 parser: babel-eslint
 globals:
   window: true
   document: true
-  KYT: true
-  __passportErrors: true
   requestAnimationFrame: true
