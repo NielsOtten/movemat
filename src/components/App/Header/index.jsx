@@ -8,7 +8,7 @@ const Header = observer(() => (
     <AppBar leftIcon='menu' onLeftIconClick={() => HeaderStore.toggleDrawerActive()} />
     <NavDrawer
       active={HeaderStore.drawerActive}
-      pinned={HeaderStore.drawerPinned} permanentAt='xxxl'
+      pinned={HeaderStore.drawerPinned}
       onOverlayClick={() => HeaderStore.toggleDrawerActive()}
     >
       <p>
