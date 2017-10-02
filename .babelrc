@@ -1,5 +1,5 @@
 {
-  "presets": ["kyt-react"],
+  "presets": ["kyt-react", "stage-1"],
   "env": {
     "development": {
       "plugins": [

@@ -28,32 +28,6 @@ module.exports = {
 
     baseConfig.resolve.extensions.push('.jsx');
 
-    const cssRule = baseConfig.module.rules.find(rule => rule.test.toString() === '/\\.css$/');
-
-    // Support pcss.
-    cssRule.test = /\.p?css$/;
-
-    const globalCssRule = Object.assign({}, cssRule); // Watch out, not a deep clone!
-    baseConfig.module.rules.push(globalCssRule);
-
-    globalCssRule.include = /node_modules/;
-
-    const globalCssLoaders = [...(globalCssRule.loader || globalCssRule.use)];
-
-    const cssLoader = Object.assign({}, globalCssLoaders.find(l => l.loader && l.loader.includes('css-loader')));
-
-    cssLoader.loader = cssLoader.loader.replace('modules&', '');
-
-    if(cssLoader.options) cssLoader.options = Object.assign({}, cssLoader.options, { modules: false });
-
-    globalCssLoaders[globalCssLoaders.findIndex(l => l.loader && l.loader.includes('css-loader'))] = cssLoader;
-
-    if(globalCssRule.loader) {
-      globalCssRule.loader = globalCssLoaders;
-    } else {
-      globalCssRule.use = globalCssLoaders;
-    }
-
     baseConfig.plugins.push(
       new webpack.LoaderOptionsPlugin({
         options: {
