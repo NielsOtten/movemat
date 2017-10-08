@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import { Layout } from 'react-toolbox';
 
 import Header from './Header';
-import Footer from './Footer';
 import Login from '../../scenes/Login';
 import NotFound from '../../scenes/NotFound';
 import SignUp from '../../scenes/SignUp';
@@ -29,7 +28,6 @@ const App = appProps => (
           <Route component={NotFound} {...appProps} />
         </Switch>
       </main>
-      <Footer />
     </Layout>
   </Router>
 );
