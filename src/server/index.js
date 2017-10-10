@@ -1,6 +1,5 @@
 import Express from 'express';
 import compression from 'compression';
-import path from 'path';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import passport from 'passport';
@@ -8,7 +7,7 @@ import connectFlash from 'connect-flash';
 import expressSession from 'express-session';
 
 import Auth from './passport';
-import Api from '../api';
+import Api from './api';
 
 const publicPath = __dirname;
 const app = Express();

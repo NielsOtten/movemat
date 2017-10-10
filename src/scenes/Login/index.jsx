@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router';
 import Input from 'react-toolbox/lib/input';
 import { Button } from 'react-toolbox';
 import { Login } from '../../services/api/User';
@@ -9,6 +10,9 @@ class LoginScene extends Component {
   state = {
     name: '',
     password: '',
+    nameError: '',
+    passwordError: '',
+    redirect: false,
   };
 
   constructor(props) {
@@ -23,8 +27,15 @@ class LoginScene extends Component {
     if(clicked || e.key === 'Enter') {
       try {
         const response = await Login(this.state.name, this.state.password);
-        console.log(response);
         const json = await response.json();
+
+        if(json instanceof Object) {
+          if(json.success) {
+            this.setState({ redirect: true });
+          } else {
+            this.setState({ nameError: json.messages.name, passwordError: json.messages.password });
+          }
+        }
       } catch(exception) {
         console.log(exception);
         // Time out, 500, weird errors are handled here.
@@ -34,6 +45,10 @@ class LoginScene extends Component {
   }
 
   render() {
+    if(this.state.redirect) {
+      return <Redirect to='/dashboard' push />;
+    }
+
     return (
       <div className={styles.loginScene}>
         <section className={styles.loginWrapper}>
@@ -45,6 +60,7 @@ class LoginScene extends Component {
             value={this.state.name}
             onKeyPress={this.handleSubmit}
             onChange={name => this.setState({ name })}
+            error={this.state.nameError}
           />
           <Input
             type='password'
@@ -53,6 +69,7 @@ class LoginScene extends Component {
             value={this.state.password}
             onKeyPress={this.handleSubmit}
             onChange={password => this.setState({ password })}
+            error={this.state.passwordError}
           />
           <Button label='inloggen' raised primary onClick={e => this.handleSubmit(e, true)} />
         </section>
