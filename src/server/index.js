@@ -1,15 +1,16 @@
-const Express = require('express');
-const compression = require('compression');
-const path = require('path');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const passport = require('passport');
-const connectFlash = require('connect-flash');
-const expressSession = require('express-session');
+import Express from 'express';
+import compression from 'compression';
+import path from 'path';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import passport from 'passport';
+import connectFlash from 'connect-flash';
+import expressSession from 'express-session';
 
-const Auth = require('./passport');
+import Auth from './passport';
+import Api from '../api';
 
-const publicPath = path.join(__dirname, '../build/public');
+const publicPath = __dirname;
 const app = Express();
 
 const port = parseInt(process.env.PORT || 3000, 10);
@@ -45,7 +46,12 @@ auth.initialize();
 // Setup the public directory so that we can server static assets.
 app.use(Express.static(publicPath));
 
-app.use((req, res) => res.sendFile(`${publicPath}/index.html`));
+// Setup api routes.
+app.use('/api', Api);
+
+app.get('*', (req, res) => {
+  res.sendFile(`${publicPath}/index.html`);
+});
 
 app.listen(port);
 console.info(`✅  server started on port: ${port}`);

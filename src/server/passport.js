@@ -1,8 +1,8 @@
 import LocalStrategy from 'passport-local';
 import Passport from 'passport';
-import User from './models/User';
-import errorMessages from './services/constants/errorMessages';
-import { errorMongoosify } from './services/utils';
+import User from '../models/User';
+import errorMessages from '../services/constants/errorMessages';
+import { errorMongoosify } from '../services/utils/index';
 
 class Auth {
 

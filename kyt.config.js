@@ -17,7 +17,7 @@ const GLOBALS = {
 module.exports = {
   reactHotLoader: true,
   debug: false,
-  hasServer: false,
+  hasServer: true,
   modifyWebpackConfig: (baseConfig) => {
     baseConfig.plugins.push(new HtmlWebpackPlugin({
       template: 'src/index.ejs',

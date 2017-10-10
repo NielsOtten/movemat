@@ -11,11 +11,13 @@ import Dashboard from '../../scenes/Dashboard';
 import AccessDenied from '../../scenes/AccessDenied';
 import AuthenticatedRoute from '../Routes/AuthenticatedRoute';
 
+import styles from './style.scss';
+
 const App = appProps => (
   <Router>
     <Layout>
       <Header />
-      <main>
+      <main className={styles.main}>
         <Switch>
           <Redirect exact from='/' to='/login' />
           <Route path='/login' component={Login} {...appProps} />
