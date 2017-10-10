@@ -1,21 +1,30 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, withRouter } from 'react-router-dom';
+import { isLoggedIn } from '../../../services/api/User';
 
-const AuthenticatedRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest} render={props => (
-    false === true ? (
-      <Component {...props} />
-    ) : (
-      <Redirect
-        to={{
-          pathname: '/geen-toegang',
-          state: { from: props.location },
-        }}
-      />
-    )
-  )}
-  />
-);
+class AuthenticatedRoute extends React.Component {
+  state = {
+    loading: true,
+    loggedIn: false,
+  };
 
-export default AuthenticatedRoute;
+  async componentDidMount() {
+    const loggedIn = await isLoggedIn();
+    this.setState({ loggedIn, loading: false });
+  }
+
+  render() {
+    const { component: Component, ...rest } = this.props;
+    if(this.state.loading) return <div>Figuring out if you are logged in. Please wait....</div>;
+    return (<Route
+      {...rest} render={props => (
+        <div>
+          {!this.state.loggedIn && <Redirect to={{ pathname: '/login' }} />}
+          <Component {...this.props} />
+        </div>
+    )}
+    />);
+  }
+}
+
+export default withRouter(AuthenticatedRoute);

@@ -16,13 +16,21 @@ router.post('/login', (req, res, next) => {
         },
       });
     }
-    req.logIn(user, (loginErr) => {
-      if(loginErr) { return next(loginErr); }
+    req.login(user, (loginErr) => {
+      console.log(user);
+      if(loginErr) { console.log(loginErr); return next(loginErr); }
       return res.json({
         success: true,
       });
     });
   })(req, res, next);
+});
+
+// Check if user is still logged in.
+router.get('/isLoggedIn', (req, res) => {
+  console.log(req.user);
+  if(!req.user) return res.json({ loggedIn: false });
+  return res.json({ loggedIn: true });
 });
 
 export default router;
