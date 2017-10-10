@@ -1,7 +1,9 @@
 import React from 'react';
 import { Route, Redirect, withRouter } from 'react-router-dom';
-import { isLoggedIn } from '../../../services/api/User';
+import { observer } from 'mobx-react';
+import AuthStore from '../../../stores/AuthStore';
 
+@observer
 class AuthenticatedRoute extends React.Component {
   state = {
     loading: true,
@@ -9,8 +11,8 @@ class AuthenticatedRoute extends React.Component {
   };
 
   async componentDidMount() {
-    const loggedIn = await isLoggedIn();
-    this.setState({ loggedIn, loading: false });
+    await AuthStore.isLoggedIn();
+    this.setState({ loading: false });
   }
 
   render() {
@@ -19,7 +21,7 @@ class AuthenticatedRoute extends React.Component {
     return (<Route
       {...rest} render={props => (
         <div>
-          {!this.state.loggedIn && <Redirect to={{ pathname: '/login' }} />}
+          {!AuthStore.loggedIn && <Redirect to={{ pathname: '/login' }} />}
           <Component {...this.props} />
         </div>
     )}
@@ -27,4 +29,4 @@ class AuthenticatedRoute extends React.Component {
   }
 }
 
-export default withRouter(AuthenticatedRoute);
+export default withRouter(observer(AuthenticatedRoute));

@@ -18,24 +18,4 @@ function Login(username = '', password = '') {
   });
 }
 
-/**
- * Checks with a fetch if the user is logged in.
- */
-async function isLoggedIn() {
-  try {
-    const response = await fetch('/api/user/isLoggedIn', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-      credentials: 'include',
-    });
-    const json = await response.json();
-    if(json instanceof Object === false) return false;
-    return json.loggedIn;
-  } catch(exception) {
-    return false;
-  }
-}
-
-export { Login, isLoggedIn };
+export { Login };
