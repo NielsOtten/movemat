@@ -25,7 +25,7 @@ const App = appProps => (
           <Route path='/reset-wachtwoord/:token' component={Login} />
           <Route path='/registreer' component={SignUp} {...appProps} />
           <AuthenticatedRoute path='/dashboard' component={Dashboard} {...appProps} />
-          <AuthenticatedRoute path='/familie/:_id' component={Group} {...appProps} />
+          <AuthenticatedRoute path='/familie/:id' component={Group} {...appProps} />
           <Route path='/geen-toegang' component={AccessDenied} {...appProps} />
           <Route component={NotFound} {...appProps} />
         </Switch>

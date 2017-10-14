@@ -10,4 +10,15 @@ function getGroups() {
   });
 }
 
-export { getGroups };
+function getPhotos(id) {
+  console.log('getting photos');
+  return fetch(`/api/group/${id}/photos`, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json',
+    },
+    credentials: 'include',
+  });
+}
+
+export { getGroups, getPhotos };
