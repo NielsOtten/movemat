@@ -11,7 +11,6 @@ function getGroups() {
 }
 
 function getPhotos(id) {
-  console.log('getting photos');
   return fetch(`/api/group/${id}/photos`, {
     method: 'GET',
     headers: {
@@ -21,4 +20,17 @@ function getPhotos(id) {
   });
 }
 
-export { getGroups, getPhotos };
+function postPhotos(files, groupId) {
+  const formData = new FormData();
+  files.forEach((file) => {
+    formData.append('image', file);
+  });
+
+  return fetch(`/api/group/${groupId}/photos`, {
+    method: 'POST',
+    credentials: 'include',
+    body: formData,
+  });
+}
+
+export { getGroups, getPhotos, postPhotos };

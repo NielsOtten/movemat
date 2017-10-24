@@ -128,3 +128,4 @@ fabric.properties
 /build/
 .DS_Store
 /server/envVariables.js
+/src/server/.env

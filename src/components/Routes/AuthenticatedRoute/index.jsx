@@ -20,9 +20,9 @@ class AuthenticatedRoute extends React.Component {
     if(this.state.loading) return <div>Figuring out if you are logged in. Please wait....</div>;
     return (<Route
       {...rest} render={props => (
-        <div>
+        <div style={{ width: '100%', height: '100%' }}>
           {!AuthStore.loggedIn && <Redirect to={{ pathname: '/login' }} />}
-          <Component {...this.props} />
+          {AuthStore.loggedIn && <Component {...this.props} />}
         </div>
     )}
     />);

@@ -3,7 +3,10 @@ import mongoose from 'mongoose';
 import azure from 'azure-storage';
 import sharp from 'sharp';
 import errorMessages from '../services/constants/errorMessages';
-import Group from './Group';
+
+const allowedFileTypes = [
+  'image/jpeg', 'image/jpg', 'image/png',
+];
 
 const Schema = new mongoose.Schema({
   name: {
@@ -55,11 +58,89 @@ const Schema = new mongoose.Schema({
 });
 
 Schema.statics.getPhotosWithGroup = async function getPhotosWithGroup(group) {
-  console.log(group);
   return this.find({ group: group._id, deleted: false });
 };
 
+/**
+ * This function will add the given file to azure.
+ *
+ * @param file
+ * @return {Promise.<void>}
+ */
+Schema.methods.addToAzure = async function addToAzure(file) {
+  console.info('adding to azure');
+  // Check the mimetypes.
+  if(!allowedFileTypes.includes(file.mimetype)) {
+    throw new Error('File type not allowed');
+  }
+
+  this.fileExtension = file.mimetype.replace('image/', '');
+  const fileName = `${this.id}.${this.fileExtension}`;
+
+  // Get blobservice from azure.
+  const blobService = azure.createBlobService();
+
+  // Create or get container.
+  const container = await new Promise((resolve, reject) => {
+    blobService.createContainerIfNotExists(this.group.toString(), async (error, result, response) => {
+      if(!error) {
+        return resolve(result);
+      }
+      throw error;
+    });
+  });
+
+  // Resize image for the thumbnail.
+  const thumbnail = await sharp(file.buffer)
+    .resize(320, 320, {
+      kernel: sharp.kernel.lanczos2,
+      interpolator: sharp.interpolator.nohalo,
+    })
+    .background({ r: 0, g: 0, b: 0, alpha: 0 })
+    .embed()
+    .toBuffer();
+
+  // Create thumbnail blob.
+  const thumbnailBlob = await new Promise((resolve, reject) => {
+    blobService.createBlockBlobFromText(
+      this.group.toString(),
+      `Thumbnail/${fileName}`,
+      thumbnail,
+      (thumbnailError, thumbnailResult, thumbnailResponse) => {
+        if(!thumbnailError) {
+          return resolve(thumbnailResult);
+          // TODO: Get url from local env.
+        }
+        throw thumbnailError;
+      });
+  });
+
+  // Data for thumbnail.
+  this.thumbnail = `https://steps-upload.herokuapp.com/api/group/${this.group.toString()}/photos/thumbnail/`;
+  this.thumbnailBlobName = thumbnailBlob.name;
+
+  // Add default image to azure.
+  const imageBlob = await new Promise((resolve, reject) => {
+    blobService.createBlockBlobFromText(
+      this.group.toString(),
+      `Default/${fileName}`,
+      file.buffer,
+      (imageError, imageResult, imageResponse) => {
+        if(!imageError) {
+          return resolve(imageResult);
+        }
+        throw imageError;
+      }
+    );
+  });
+
+  // TODO: Get url from local env.
+  this.path = `https://steps-upload.herokuapp.com/api/group/${this.group.toString()}/photos/`;
+  this.blobName = imageBlob.name;
+  return this;
+};
 //
+// //
 // Schema.methods.addToAzure = function addToAzure(file) {
 //   return new Promise((resolve, reject) => {
 //     const allowedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];

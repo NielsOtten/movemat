@@ -44,6 +44,10 @@ Schema.statics.getGroupsFromUser = async function getGroupsFromUser(user) {
   return this.find({ allowedEmails: { $in: [user.email.toString()] } });
 };
 
+Schema.methods.memberOfGroup = async function memberOfGroup(user) {
+  return this.allowedEmails.includes(user.email);
+};
+
 //
 // Schema.statics.getGroup = async function getGroup(user, id) {
 //   try {

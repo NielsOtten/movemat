@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { getPhotos } from '../../services/api/Group';
 import Photo from '../../components/Photo';
 import styles from './styles.scss';
+import PhotoUpload from './PhotoUpload';
 
 class Group extends Component {
   state = {
@@ -21,12 +22,19 @@ class Group extends Component {
   }
 
   render() {
-    const photos = this.state.photos.map(photo => <Photo key={photo._id} />);
+    const photos = this.state.photos.map(photo => (
+      <Photo
+        key={photo._id}
+        thumbnail={`${photo.thumbnail}?preview=1`}
+        photo={`${photo.path}?preview=1`}
+        title={photo.name}
+      />));
 
     return (
-      <div>
+      <div className={styles.groupWrapper}>
         photos
-        <div className={styles.photos}>
+        <PhotoUpload groupId={this.props.computedMatch.params.id} />
+        <div>
           {photos.length <= 0 && <p>Er zijn nog geen foto's gevonden</p>}
           {photos}
         </div>
