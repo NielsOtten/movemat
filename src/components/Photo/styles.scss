@@ -1,3 +1,48 @@
-.thumbnail {
+.photo {
+  display: block;
+  margin: 1rem;
+}
 
+.thumbnail {
+  cursor: pointer;
+  img {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+.mainImage {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  background: rgba(0,0,0,0.6);
+  cursor: pointer;
+
+  img {
+    cursor: auto;
+    position: relative;
+    max-width: 70%;
+    max-height: 70%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .photo {
+    width: calc(50% - 2rem);
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .photo {
+    width: calc(33.3333% - 2rem);
+  }
 }

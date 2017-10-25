@@ -43,7 +43,7 @@ class Group extends Component {
     return (
       <div className={styles.groupWrapper}>
         <PhotoUpload groupId={this.props.computedMatch.params.id} getPhotos={this.getPhotos} />
-        <div>
+        <div className={styles.photos}>
           {photos.length <= 0 && <p>Er zijn nog geen foto's gevonden</p>}
           {photos}
         </div>

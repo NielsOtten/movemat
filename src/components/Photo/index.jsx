@@ -3,15 +3,23 @@ import PropTypes from 'prop-types';
 import styles from './styles.scss';
 
 class Photo extends Component {
+  state = {
+    open: false,
+  };
+
+  toggleOpen = () => {
+    this.setState({ open: !this.state.open });
+  };
+
   render() {
     return (
-      <div>
-        <div className={styles.thumbnail}>
+      <div className={styles.photo}>
+        <div className={styles.thumbnail} onClick={this.toggleOpen}>
           <img src={this.props.thumbnail} alt={this.props.title} />
         </div>
-        <div className={styles.mainImage}>
-          <img src={this.props.photo} alt={this.props.title} />
-        </div>
+        {this.state.open && <div className={styles.mainImage} onClick={this.toggleOpen}>
+          <img src={this.props.photo} alt={this.props.title} onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} />
+        </div> }
       </div>
     );
   }
