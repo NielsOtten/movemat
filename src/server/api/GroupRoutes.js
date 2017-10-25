@@ -3,35 +3,16 @@ import express from 'express';
 import multer from 'multer';
 import Group from '../../models/Group';
 import Photo from '../../models/Photo';
+import { isLoggedIn, memberOfGroup, tokenOrLoggedIn } from '../middleware';
 
 const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 /**
- * Default error handling for group routes.
- */
-function groupUndefined(res) {
-  res.status(400);
-  return res.json({ error: 'group is undefined' });
-}
-
-function userUndefined(res) {
-  res.status(403);
-  return res.json({ loggedIn: false });
-}
-
-function notMemberOfGroup(res) {
-  res.status(403);
-  return res.json({ error: 'User not member of group' });
-}
-
-
-/**
  * Get the groups by the user who is requesting this page.
  */
-router.get('/', async (req, res) => {
-  if(!req.user) return res.json({ loggedIn: false });
+router.get('/', isLoggedIn, async (req, res) => {
   const groups = await Group.getGroupsFromUser(req.user);
   return res.json({ groups });
 });
@@ -39,51 +20,18 @@ router.get('/', async (req, res) => {
 /**
  * Get all the photos from the given group id.
  */
-router.get('/:id/photos', async (req, res) => {
-  const user = req.user;
-
-  if(!user) {
-    return userUndefined(res);
-  }
-
-  const id = req.params.id;
-  const group = await Group.findOne({ _id: id });
-
-  if(!group || group === 'undefined') {
-    return groupUndefined(res);
-  }
-
-  // Check if user is member of the group.
-  if(!group.memberOfGroup(user)) {
-    return notMemberOfGroup(res);
-  }
-
+router.get('/:id/photos', memberOfGroup, async (req, res) => {
   // Get all the photos.
-  const photos = await Photo.getPhotosWithGroup(group);
+  const photos = await Photo.getPhotosWithGroup(res.locals.group);
   return res.json(photos);
 });
 
 /**
  * Save the given photo's to the given group.
  */
-router.post('/:id/photos', upload.array('image'), async (req, res) => {
+router.post('/:id/photos', memberOfGroup, upload.array('image'), async (req, res) => {
   const user = req.user;
   const id = req.params.id;
-
-  // Check if user is logged in.
-  if(!user) {
-    userUndefined(res);
-  }
-
-  const group = await Group.findOne({ _id: id });
-  if(!group || group === 'undefined') {
-    return groupUndefined(res);
-  }
-
-  // Check if user is member of the group.
-  if(!group.memberOfGroup(user)) {
-    return notMemberOfGroup(res);
-  }
 
   const newPhotos = await Promise.all(req.files.map(async (file) => {
     // Create new photo and later add the azure data.
@@ -116,8 +64,37 @@ router.post('/:id/photos', upload.array('image'), async (req, res) => {
 /**
  * Get Photo detail
  */
-router.post('/:id/photos/:photoId', async (req, res) => {
+router.get('/:id/photos/:photoId', tokenOrLoggedIn, async (req, res) => {
+  const { preview } = req.query;
+  const { id, photoId } = req.params;
 
+  const photo = await Photo.findOne({ _id: photoId });
+  const url = await photo.getPhotoFromAzure(id);
+
+  if(!preview) {
+    photo.downloaded = true;
+    photo.save();
+  }
+
+  return res.redirect(url);
+});
+
+/**
+ * Get Photo detail
+ */
+router.get('/:id/photos/thumbnail/:photoId', tokenOrLoggedIn, async (req, res) => {
+  const { preview } = req.query;
+  const { id, photoId } = req.params;
+
+  const photo = await Photo.findOne({ _id: photoId });
+  const url = await photo.getPhotoFromAzure(id);
+
+  if(!preview) {
+    photo.downloaded = true;
+    photo.save();
+  }
+
+  return res.redirect(url);
 });
 
 export default router;

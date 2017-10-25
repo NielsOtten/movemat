@@ -139,6 +139,20 @@ Schema.methods.addToAzure = async function addToAzure(file) {
   this.blobName = imageBlob.name;
   return this;
 };
+
+Schema.methods.getPhotoFromAzure = async function getPhotoFromAzure(id) {
+  const blobService = azure.createBlobService();
+  const groupId = this.group.toString();
+  const sasToken = await blobService.generateSharedAccessSignature(groupId, this.blobName, { AccessPolicy: {
+    Expiry: azure.date.minutesFromNow(60),
+    Permissions: azure.BlobUtilities.SharedAccessPermissions.READ,
+  } }, {
+    contentType: this.fileType,
+  });
+  const url = await blobService.getUrl(groupId, this.blobName, sasToken, 'https://steps.blob.core.windows.net');
+  return url;
+};
+
 //
 // //
 // Schema.methods.addToAzure = function addToAzure(file) {
