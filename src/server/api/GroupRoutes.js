@@ -66,10 +66,10 @@ router.post('/:id/photos', memberOfGroup, upload.array('image'), async (req, res
  */
 router.get('/:id/photos/:photoId', tokenOrLoggedIn, async (req, res) => {
   const { preview } = req.query;
-  const { id, photoId } = req.params;
+  const { photoId } = req.params;
 
   const photo = await Photo.findOne({ _id: photoId });
-  const url = await photo.getPhotoFromAzure(id);
+  const url = await photo.getPhotoFromAzure();
 
   if(!preview) {
     photo.downloaded = true;
@@ -83,16 +83,10 @@ router.get('/:id/photos/:photoId', tokenOrLoggedIn, async (req, res) => {
  * Get Photo detail
  */
 router.get('/:id/photos/thumbnail/:photoId', tokenOrLoggedIn, async (req, res) => {
-  const { preview } = req.query;
-  const { id, photoId } = req.params;
+  const { photoId } = req.params;
 
   const photo = await Photo.findOne({ _id: photoId });
-  const url = await photo.getPhotoFromAzure(id);
-
-  if(!preview) {
-    photo.downloaded = true;
-    photo.save();
-  }
+  const url = await photo.getThumbnailFromAzure();
 
   return res.redirect(url);
 });

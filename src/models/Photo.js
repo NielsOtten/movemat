@@ -140,7 +140,7 @@ Schema.methods.addToAzure = async function addToAzure(file) {
   return this;
 };
 
-Schema.methods.getPhotoFromAzure = async function getPhotoFromAzure(id) {
+Schema.methods.getPhotoFromAzure = async function getPhotoFromAzure() {
   const blobService = azure.createBlobService();
   const groupId = this.group.toString();
   const sasToken = await blobService.generateSharedAccessSignature(groupId, this.blobName, { AccessPolicy: {
@@ -149,8 +149,19 @@ Schema.methods.getPhotoFromAzure = async function getPhotoFromAzure(id) {
   } }, {
     contentType: this.fileType,
   });
-  const url = await blobService.getUrl(groupId, this.blobName, sasToken, 'https://steps.blob.core.windows.net');
-  return url;
+  return blobService.getUrl(groupId, this.blobName, sasToken, 'https://steps.blob.core.windows.net');
+};
+
+Schema.methods.getThumbnailFromAzure = async function getThumbnailFromAzure() {
+  const blobService = azure.createBlobService();
+  const groupId = this.group.toString();
+  const sasToken = await blobService.generateSharedAccessSignature(groupId, this.thumbnailBlobName, { AccessPolicy: {
+    Expiry: azure.date.minutesFromNow(60),
+    Permissions: azure.BlobUtilities.SharedAccessPermissions.READ,
+  } }, {
+    contentType: this.fileType,
+  });
+  return blobService.getUrl(groupId, this.thumbnailBlobName, sasToken, 'https://steps.blob.core.windows.net');
 };
 
 //

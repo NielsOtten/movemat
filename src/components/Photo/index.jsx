@@ -5,9 +5,11 @@ import styles from './styles.scss';
 const Photo = ({ thumbnail, photo, title }) => (
   <div>
     <div className={styles.thumbnail}>
+      <img src={thumbnail} alt={title} />
+    </div>
+    <div className={styles.mainImage}>
       <img src={photo} alt={title} />
     </div>
-    <div className={styles.mainImage} />
   </div>
 );
 
