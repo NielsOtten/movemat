@@ -116,7 +116,7 @@ Schema.methods.addToAzure = async function addToAzure(file) {
   });
 
   // Data for thumbnail.
-  this.thumbnail = `https://steps-upload.herokuapp.com/api/group/${this.group.toString()}/photos/thumbnail/`;
+  this.thumbnail = `/api/group/${this.group.toString()}/photos/thumbnail/`;
   this.thumbnailBlobName = thumbnailBlob.name;
 
   // Add default image to azure.
@@ -134,8 +134,7 @@ Schema.methods.addToAzure = async function addToAzure(file) {
     );
   });
 
-  // TODO: Get url from local env.
-  this.path = `https://steps-upload.herokuapp.com/api/group/${this.group.toString()}/photos/`;
+  this.path = `/api/group/${this.group.toString()}/photos/`;
   this.blobName = imageBlob.name;
   return this;
 };

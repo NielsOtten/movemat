@@ -10,8 +10,18 @@ class Group extends Component {
     photos: [],
   };
 
+  constructor(props) {
+    super(props);
+
+    this.getPhotos = this.getPhotos.bind(this);
+  }
+
   async componentDidMount() {
     const id = this.props.computedMatch.params.id;
+    this.getPhotos(id);
+  }
+
+  async getPhotos(id) {
     try {
       const response = await getPhotos(id);
       const photos = await response.json();
@@ -33,7 +43,7 @@ class Group extends Component {
     return (
       <div className={styles.groupWrapper}>
         photos
-        <PhotoUpload groupId={this.props.computedMatch.params.id} />
+        <PhotoUpload groupId={this.props.computedMatch.params.id} getPhotos={this.getPhotos} />
         <div>
           {photos.length <= 0 && <p>Er zijn nog geen foto's gevonden</p>}
           {photos}
