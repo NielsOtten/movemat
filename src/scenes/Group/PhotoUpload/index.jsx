@@ -81,7 +81,9 @@ class PhotoUpload extends Component {
   render() {
     return (
       <div>
-        {this.state.drag && !this.state.uploading && <div>Sleep uw foto's hier.</div>}
+        {this.state.drag && !this.state.uploading && <div className={styles.dragArea}>
+          <p>{'Sleep hier uw foto\'s.'}</p>
+        </div>}
         {this.state.uploading && <ProgressBar className={styles.progressBar} type='circular' mode='indeterminate' multicolor />}
         <Snackbar
           active={this.state.uploaded}
