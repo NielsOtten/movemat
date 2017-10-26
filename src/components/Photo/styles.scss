@@ -1,4 +1,5 @@
 .photo {
+  position: relative;
   display: block;
   margin: 1rem;
 }
@@ -9,6 +10,13 @@
     display: block;
     max-width: 100%;
   }
+}
+
+.delete {
+  cursor: pointer;
+  position: absolute;
+  right: -20px;
+  top: -20px;
 }
 
 .mainImage {

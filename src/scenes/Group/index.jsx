@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
-import { getPhotos } from '../../services/api/Group';
+import { getPhotos, deletePhoto } from '../../services/api/Group';
 import Photo from '../../components/Photo';
 import styles from './styles.scss';
 import PhotoUpload from './PhotoUpload';
@@ -14,6 +14,7 @@ class Group extends Component {
     super(props);
 
     this.getPhotos = this.getPhotos.bind(this);
+    this.deletePhoto = this.deletePhoto.bind(this);
   }
 
   async componentDidMount() {
@@ -31,6 +32,15 @@ class Group extends Component {
     }
   }
 
+  async deletePhoto(id, groupId) {
+    try {
+      const response = await deletePhoto(id, groupId);
+      this.getPhotos(this.props.computedMatch.params.id);
+    } catch(exception) {
+      console.info(exception);
+    }
+  }
+
   render() {
     const photos = this.state.photos.map(photo => (
       <Photo
@@ -38,6 +48,7 @@ class Group extends Component {
         thumbnail={`${photo.thumbnail}?preview=1`}
         photo={`${photo.path}?preview=1`}
         title={photo.name}
+        deletePhoto={() => this.deletePhoto(photo._id, this.props.computedMatch.params.id)}
       />));
 
     return (

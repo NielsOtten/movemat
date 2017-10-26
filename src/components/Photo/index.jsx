@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'react-toolbox/lib/button';
 import styles from './styles.scss';
 
 class Photo extends Component {
@@ -14,6 +15,7 @@ class Photo extends Component {
   render() {
     return (
       <div className={styles.photo}>
+        <Button className={styles.delete} icon='delete' floating onClick={this.props.deletePhoto} />
         <div className={styles.thumbnail} onClick={this.toggleOpen}>
           <img src={this.props.thumbnail} alt={this.props.title} />
         </div>

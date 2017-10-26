@@ -80,7 +80,7 @@ router.get('/:id/photos/:photoId', tokenOrLoggedIn, async (req, res) => {
 });
 
 /**
- * Get Photo detail
+ * Get thumbnail detail
  */
 router.get('/:id/photos/thumbnail/:photoId', tokenOrLoggedIn, async (req, res) => {
   const { photoId } = req.params;
@@ -89,6 +89,18 @@ router.get('/:id/photos/thumbnail/:photoId', tokenOrLoggedIn, async (req, res) =
   const url = await photo.getThumbnailFromAzure();
 
   return res.redirect(url);
+});
+
+/**
+ * Delete Photo
+ */
+router.delete('/:id/photos/:photoId', memberOfGroup, async (req, res) => {
+  const { photoId } = req.params;
+  const photo = await Photo.findOne({ _id: photoId });
+  photo.deleted = true;
+  photo.save();
+
+  return res.json({ deleted: photo });
 });
 
 export default router;

@@ -33,4 +33,14 @@ function postPhotos(files, groupId) {
   });
 }
 
-export { getGroups, getPhotos, postPhotos };
+function deletePhoto(photoId, groupId) {
+  return fetch(`/api/group/${groupId}/photos/${photoId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-type': 'application/json',
+    },
+    credentials: 'include',
+  });
+}
+
+export { getGroups, getPhotos, postPhotos, deletePhoto };
