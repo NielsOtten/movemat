@@ -7,12 +7,15 @@ import styles from './styles.scss';
 class PhotoUpload extends Component {
   state = {
     drag: false,
+    draggedFiles: [],
     uploading: false,
     uploaded: false,
   };
 
   constructor(props) {
     super(props);
+
+    this.dragTargets = [];
 
     this.onDrop = this.onDrop.bind(this);
   }
@@ -38,17 +41,60 @@ class PhotoUpload extends Component {
     window.removeEventListener('drop', this.onDrop);
   }
 
-  onDragEnter = () => {
-    this.setState({ drag: true });
+  getDataTransferItems(event) {
+    let dataTransferItemsList = [];
+    if(event.dataTransfer) {
+      const dt = event.dataTransfer;
+      if(dt.files && dt.files.length) {
+        dataTransferItemsList = dt.files;
+      } else if(dt.items && dt.items.length) {
+        // During the drag even the dataTransfer.files is null
+        // but Chrome implements some drag store, which is accesible via dataTransfer.items
+        dataTransferItemsList = dt.items;
+      }
+    } else if(event.target && event.target.files) {
+      dataTransferItemsList = event.target.files;
+    }
+    // Convert from DataTransferItemsList to the native Array
+    return Array.prototype.slice.call(dataTransferItemsList);
+  }
+
+  onDragEnter = (e) => {
+    e.preventDefault();
+
+    // Count the dropzone and any children that are entered.
+    if(this.dragTargets.indexOf(e.target) === -1) {
+      this.dragTargets.push(e.target);
+    }
+
+    this.setState({
+      drag: true,
+      draggedFiles: this.getDataTransferItems(e),
+    });
   };
 
-  onDragLeave = () => {
-    this.setState({ drag: false });
+  onDragLeave = (e) => {
+    e.preventDefault();
+
+    // Only deactivate once the dropzone and all children have been left.
+    this.dragTargets = this.dragTargets.filter(el => el !== e.target && document.querySelector('#root').contains(el));
+    if(this.dragTargets.length > 0) {
+      return;
+    }
+
+    // Clear dragging files state
+    this.setState({
+      drag: false,
+      draggedFiles: [],
+    });
   };
 
   async onDrop(e) {
     e.preventDefault();
     e.stopPropagation();
+
+    this.dragTargets = [];
+
     if(!this.state.uploading) {
       const fileList = e.dataTransfer.files;
       const files = [].slice.call(fileList);
@@ -66,7 +112,7 @@ class PhotoUpload extends Component {
         }
       }
 
-      this.setState({ drag: false, uploading: false });
+      this.setState({ drag: false, uploading: false, draggedFiles: [] });
     }
   }
 
