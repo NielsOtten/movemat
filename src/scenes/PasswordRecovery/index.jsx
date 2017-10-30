@@ -28,7 +28,7 @@ class PasswordRecovery extends Component {
           if(json.success) {
             this.setState({ redirect: true });
           } else {
-            this.setState({ nameError: json.messages.name});
+            this.setState({ nameError: json.messages.name });
           }
         }
       } catch(exception) {
@@ -43,7 +43,8 @@ class PasswordRecovery extends Component {
     return (
       <Box >
         <h2>Wachtwoord vergeten</h2>
-        <p>Bent u uw wachtwoord vergeten? Vul dan hieronder uw gebruikersnaam of Email in. Dan krijgt u van ons een mail met daarin een link om uw wachtwoord te herstellen.</p>
+        <p>Bent u uw wachtwoord vergeten? Vul dan hieronder uw gebruikersnaam of Email in.
+          Dan krijgt u van ons een mail met daarin een link om uw wachtwoord te herstellen.</p>
         <Input
           type='text'
           label='Gebruikersnaam/E-mailadres'
