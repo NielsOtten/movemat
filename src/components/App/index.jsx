@@ -4,6 +4,7 @@ import { Layout } from 'react-toolbox';
 
 import Header from './Header';
 import Login from '../../scenes/Login';
+import PasswordRecovery from '../../scenes/PasswordRecovery';
 import NotFound from '../../scenes/NotFound';
 import SignUp from '../../scenes/SignUp';
 import Group from '../../scenes/Group';
@@ -21,7 +22,7 @@ const App = appProps => (
         <Switch>
           <Redirect exact from='/' to='/login' />
           <Route path='/login' component={Login} {...appProps} />
-          <Route path='/herstel-wachtwoord' component={Login} />
+          <Route path='/wachtwoord-vergeten' component={PasswordRecovery} />
           <Route path='/reset-wachtwoord/:token' component={Login} />
           <Route path='/registreer' component={SignUp} {...appProps} />
           <AuthenticatedRoute path='/dashboard' component={Dashboard} {...appProps} />

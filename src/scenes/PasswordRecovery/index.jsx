@@ -1,20 +1,13 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
 import Input from 'react-toolbox/lib/input';
 import { Button } from 'react-toolbox';
-import { Login } from '../../services/api/User';
+import { recoverPassword } from '../../services/api/User';
 import Box from '../../components/common/Box';
-import styles from './style.scss';
 
-class LoginScene extends Component {
-
+class PasswordRecovery extends Component {
   state = {
     name: '',
-    password: '',
     nameError: '',
-    passwordError: '',
-    redirect: false,
   };
 
   constructor(props) {
@@ -28,14 +21,14 @@ class LoginScene extends Component {
   async handleSubmit(e, clicked = false) {
     if(clicked || e.key === 'Enter') {
       try {
-        const response = await Login(this.state.name, this.state.password);
+        const response = await recoverPassword(this.state.name);
         const json = await response.json();
 
         if(json instanceof Object) {
           if(json.success) {
             this.setState({ redirect: true });
           } else {
-            this.setState({ nameError: json.messages.name, passwordError: json.messages.password });
+            this.setState({ nameError: json.messages.name});
           }
         }
       } catch(exception) {
@@ -47,13 +40,10 @@ class LoginScene extends Component {
   }
 
   render() {
-    if(this.state.redirect) {
-      return <Redirect to='/dashboard' push />;
-    }
-
     return (
-      <Box>
-        <h2>Steps login</h2>
+      <Box >
+        <h2>Wachtwoord vergeten</h2>
+        <p>Bent u uw wachtwoord vergeten? Vul dan hieronder uw gebruikersnaam of Email in. Dan krijgt u van ons een mail met daarin een link om uw wachtwoord te herstellen.</p>
         <Input
           type='text'
           label='Gebruikersnaam/E-mailadres'
@@ -63,20 +53,10 @@ class LoginScene extends Component {
           onChange={name => this.setState({ name })}
           error={this.state.nameError}
         />
-        <Input
-          type='password'
-          label='Wachtwoord'
-          name='password'
-          value={this.state.password}
-          onKeyPress={this.handleSubmit}
-          onChange={password => this.setState({ password })}
-          error={this.state.passwordError}
-        />
-        <Link className={styles.passwordLink} to='/wachtwoord-vergeten' >Wachtwoord vergeten</Link>
-        <Button label='inloggen' raised primary onClick={e => this.handleSubmit(e, true)} />
+        <Button label='herstel' raised primary onClick={e => this.handleSubmit(e, true)} />
       </Box>
     );
   }
 }
 
-export default LoginScene;
+export default PasswordRecovery;
