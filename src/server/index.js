@@ -50,14 +50,10 @@ app.use(Express.static(publicPath));
 // Setup api routes.
 app.use('/api', Api);
 
-app.get('/login', (req, res, next) => {
-  console.log(`user: ${req.user}`);
-  return next();
-});
+app.get('*', (req, res) => res.sendFile(`${publicPath}/index.html`));
 
-app.get('*', (req, res) => {
-  res.sendFile(`${publicPath}/index.html`);
-});
 
-app.listen(port);
-console.info(`✅  server started on port: ${port}`);
+app.listen(port, () => {
+// eslint-disable-next-line no-console
+  console.log(`✅  server started on port: ${port}`);
+});
