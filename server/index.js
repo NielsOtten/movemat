@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 
 // Setup passport + session
 app.use(expressSession({
-  secret: 'StepsIsMooieDingen',
+  secret: process.env.SESSION_SECRET,
   resave: true,
   saveUninitialized: true,
 }));

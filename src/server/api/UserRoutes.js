@@ -1,5 +1,6 @@
 import express from 'express';
 import passport from 'passport';
+import { isLoggedIn } from '../middleware';
 
 const router = express.Router();
 
@@ -25,16 +26,13 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
+// Get detail of logged in user.
+router.get('/', isLoggedIn, (req, res) => res.json({ user: req.user }));
+
 // Check if user is still logged in.
-router.get('/isLoggedIn', (req, res) => {
-  if(!req.user) return res.json({ loggedIn: false });
-  return res.json({ loggedIn: true });
-});
+router.get('/isLoggedIn', isLoggedIn, (req, res) => res.json({ loggedIn: true }));
 
 // Log out user.
-router.get('/logout', (req, res) => {
-  if(!req.user) return res.json({ loggedIn: false });
-  req.session.destroy(() => res.json({ loggedIn: false }));
-});
+router.get('/logout', isLoggedIn, (req, res) => req.session.destroy(() => res.json({ loggedIn: false })));
 
 export default router;

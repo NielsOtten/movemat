@@ -40,6 +40,7 @@ const Schema = mongoose.Schema({
   password: {
     type: String,
     required: `Wachtwoord ${errorMessages.REQUIRED_ERROR}.`,
+    select: false,
   },
   timestamp: {
     type: Date,

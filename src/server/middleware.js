@@ -18,6 +18,11 @@ function notMemberOfGroup(res) {
   return res.json({ error: 'User not member of group' });
 }
 
+function userNoAccess(res) {
+  res.status(403);
+  return res.json({ error: 'User role not valid' });
+}
+
 function isLoggedIn(req, res, next) {
   if(!req.user) {
     return userUndefined(res);
@@ -78,7 +83,15 @@ async function tokenOrLoggedIn(req, res, next) {
 }
 
 function isAdmin(req, res, next) {
+  if(!req.user) {
+    return userUndefined(res);
+  }
 
+  if(req.user.role !== 'admin') {
+    return userNoAccess(res);
+  }
+
+  return next();
 }
 
 export { isLoggedIn, memberOfGroup, tokenOrLoggedIn, isAdmin };

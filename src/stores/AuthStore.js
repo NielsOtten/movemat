@@ -3,6 +3,7 @@ import fetch from 'fetch-everywhere';
 
 class AuthStore {
   @observable loggedIn = false;
+  @observable role = '';
 
   async isLoggedIn() {
     try {
@@ -18,6 +19,23 @@ class AuthStore {
       return this.loggedIn = json.loggedIn;
     } catch(exception) {
       return this.loggedIn = false;
+    }
+  }
+
+  async getRole() {
+    try {
+      const response = await fetch('/api/user', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+        credentials: 'include',
+      });
+      const json = await response.json();
+      if(json instanceof Object === false || json.user === 'undefined') return this.role = '';
+      return this.role = json.user.role;
+    } catch(exception) {
+      return this.role = '';
     }
   }
 

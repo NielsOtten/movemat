@@ -7,12 +7,12 @@ import AuthStore from '../../../stores/AuthStore';
 class AuthenticatedRoute extends React.Component {
   state = {
     loading: true,
-    loggedIn: false,
   };
 
   async componentDidMount() {
-    await AuthStore.isLoggedIn();
-    this.setState({ loading: false });
+    AuthStore.isLoggedIn().then(() => {
+      this.setState({ loading: false });
+    });
   }
 
   render() {
