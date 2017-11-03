@@ -10,6 +10,7 @@ import SignUp from '../../scenes/SignUp';
 import Group from '../../scenes/Group';
 import Dashboard from '../../scenes/Dashboard';
 import AdminStepsView from '../../scenes/Admin/Steps/view';
+import UserStepsView from '../../scenes/Admin/User/view';
 import AccessDenied from '../../scenes/AccessDenied';
 import AuthenticatedRoute from '../Routes/AuthenticatedRoute';
 import AdminRoute from '../Routes/AdminRoute';
@@ -26,6 +27,7 @@ const constants = Object.freeze({
   GROUP_ROUTE: '/familie/:id',
   NO_ACCESS_ROUTE: '/geen-toegang',
   STEPS_VIEW_ROUTE: '/admin/steps',
+  USER_VIEW_ROUTE: '/admin/users',
 });
 
 const App = appProps => (
@@ -42,6 +44,7 @@ const App = appProps => (
           <AuthenticatedRoute path={constants.DASHBOARD_ROUTE} component={Dashboard} {...appProps} />
           <AuthenticatedRoute path={constants.GROUP_ROUTE} component={Group} {...appProps} />
           <AdminRoute path={constants.STEPS_VIEW_ROUTE} component={AdminStepsView} {...appProps} />
+          <AdminRoute path={constants.USER_VIEW_ROUTE} component={UserStepsView} {...appProps} />
           <Route path={constants.NO_ACCESS_ROUTE} component={AccessDenied} {...appProps} />
           <Route component={NotFound} {...appProps} />
         </Switch>
