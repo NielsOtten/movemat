@@ -18,7 +18,9 @@ const port = parseInt(process.env.PORT || 3000, 10);
 require('dotenv').config();
 
 const mongoURL = process.env.MONGODB_URI || 'mongodb://localhost/steps';
-mongoose.connect(mongoURL);
+mongoose.connect(mongoURL, { useMongoClient: true }, (ignore, connection) => {
+  connection.onOpen();
+}).then(() => { console.info('connected'); }).catch(console.error);
 
 // Remove annoying Express header addition.
 app.disable('x-powered-by');
