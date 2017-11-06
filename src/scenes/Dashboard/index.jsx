@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { List, ListSubHeader, ListItem } from 'react-toolbox/lib/list';
 import { getGroups } from '../../services/api/Group';
+import { Link } from 'react-router-dom';
 
 class Dashboard extends Component {
   state = {
@@ -21,11 +22,12 @@ class Dashboard extends Component {
 
   render() {
     const groups = this.state.groups.map(group => (
-      <ListItem
-        key={group._id}
-        caption={group.name}
-        to={`/familie/${group._id}`}
-      />
+      <Link to={`/familie/${group._id}`}>
+        <ListItem
+          key={group._id}
+          caption={group.name}
+        />
+      </Link>
     ));
 
     return (

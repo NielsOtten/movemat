@@ -2,7 +2,9 @@
 import React, { Component } from 'react';
 import fetch from 'fetch-everywhere';
 import { Table, TableHead, TableRow, TableCell } from 'react-toolbox/lib/table';
+import { constants as LinkRoutes } from '../../../../components/App';
 import Button from '../../../../components/common/LinkButtons';
+import AdminStyles from '../../styles.scss';
 
 class StepsView extends Component {
   state = {
@@ -45,16 +47,19 @@ class StepsView extends Component {
       </TableRow>));
 
     return (
-      <Table>
-        <TableHead>
-          <TableCell>Id</TableCell>
-          <TableCell>Gebruikersnaam</TableCell>
-          <TableCell>Email</TableCell>
-          <TableCell>Rol</TableCell>
-          <TableCell>Acties</TableCell>
-        </TableHead>
-        {users}
-      </Table>
+      <div>
+        <Button className={AdminStyles.addButton} href={LinkRoutes.USER_NEW_ROUTE} icon='add' floating />
+        <Table>
+          <TableHead>
+            <TableCell>Id</TableCell>
+            <TableCell>Gebruikersnaam</TableCell>
+            <TableCell>Email</TableCell>
+            <TableCell>Rol</TableCell>
+            <TableCell>Acties</TableCell>
+          </TableHead>
+          {users}
+        </Table>
+      </div>
     );
   }
 }

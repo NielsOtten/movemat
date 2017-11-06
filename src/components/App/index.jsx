@@ -32,10 +32,10 @@ const constants = Object.freeze({
   NO_ACCESS_ROUTE: '/geen-toegang',
   STEPS_VIEW_ROUTE: '/admin/steps',
   STEPS_EDIT_ROUTE: '/admin/steps/:id/edit',
-  STEPS_NEW_ROUTE: '/admin/steps/:id/new',
+  STEPS_NEW_ROUTE: '/admin/steps/new',
   USER_VIEW_ROUTE: '/admin/users',
   USER_EDIT_ROUTE: '/admin/users/:id/edit',
-  USER_NEW_ROUTE: '/admin/users/:id/new',
+  USER_NEW_ROUTE: '/admin/users/new',
 });
 
 const App = appProps => (

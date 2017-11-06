@@ -2,7 +2,9 @@
 import React, { Component } from 'react';
 import fetch from 'fetch-everywhere';
 import { Table, TableHead, TableRow, TableCell } from 'react-toolbox/lib/table';
+import { constants as LinkRoutes } from '../../../../components/App/index';
 import Button from '../../../../components/common/LinkButtons';
+import AdminStyles from '../../styles.scss';
 
 class StepsView extends Component {
   state = {
@@ -32,7 +34,7 @@ class StepsView extends Component {
   }
 
   render() {
-    const groups = this.state.groups.map((group) => (
+    const groups = this.state.groups.map(group => (
       <TableRow key={group._id}>
         <TableCell>{group._id}</TableCell>
         <TableCell>{group.name}</TableCell>
@@ -44,15 +46,18 @@ class StepsView extends Component {
       </TableRow>));
 
     return (
-      <Table>
-        <TableHead>
-          <TableCell>Id</TableCell>
-          <TableCell>Naam</TableCell>
-          <TableCell>Token</TableCell>
-          <TableCell>Acties</TableCell>
-        </TableHead>
-        {groups}
-      </Table>
+      <div>
+        <Button className={AdminStyles.addButton} href={LinkRoutes.STEPS_NEW_ROUTE} icon='add' floating />
+        <Table>
+          <TableHead>
+            <TableCell>Id</TableCell>
+            <TableCell>Naam</TableCell>
+            <TableCell>Token</TableCell>
+            <TableCell>Acties</TableCell>
+          </TableHead>
+          {groups}
+        </Table>
+      </div>
     );
   }
 }
