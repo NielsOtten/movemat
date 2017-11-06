@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 import { AppBar, NavDrawer, Navigation } from 'react-toolbox';
 import { Redirect } from 'react-router-dom';
 import Button from '../../common/LinkButtons';
-import HeaderStore from './HeaderStore';
 import AuthStore from '../../../stores/AuthStore';
 import style from './style.scss';
 
@@ -18,8 +17,8 @@ class Header extends Component {
       <div>
         {this.state.logout && <Redirect to='/' />}
         <AppBar>
+          <img className={style.logo} src='/steps-logo.png' alt='Steps Logo' />
           <Navigation type='horizontal' className={style.navigation}>
-            {/* TODO: Make own buttons for routing. */}
             {!AuthStore.loggedIn && <Button href='/login' label='Login' className={style.raisedButton} raised /> }
             {!AuthStore.loggedIn && <Button href='/registreer' label='Registreren' className={style.flatButton} flat />}
             {AuthStore.loggedIn && <Button href='/' label='Log uit' className={style.raisedButton} onClick={(e) => { e.preventDefault(); this.setState({ logout: true }); AuthStore.logOut(); }} raised /> }

@@ -9,6 +9,7 @@
   img {
     display: block;
     max-width: 100%;
+    margin: 0 auto;
   }
 }
 
@@ -50,8 +51,14 @@
   }
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 800px) {
   .photo {
     width: calc(33.3333% - 2rem);
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .photo {
+    width: calc(25% - 2rem);
   }
 }
