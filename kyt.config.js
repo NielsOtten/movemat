@@ -20,8 +20,8 @@ module.exports = {
   hasServer: true,
   modifyWebpackConfig: (baseConfig) => {
     baseConfig.plugins.push(new HtmlWebpackPlugin({
-      template: 'src/index.ejs',
-      favicon: 'src/favicon.ico',
+      template: 'src/server/index.ejs',
+      favicon: 'src/public/favicon.ico',
     }));
 
     baseConfig.plugins.push(new webpack.DefinePlugin(GLOBALS));

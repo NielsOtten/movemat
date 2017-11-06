@@ -72,7 +72,7 @@ class LoginScene extends Component {
           onChange={password => this.setState({ password })}
           error={this.state.passwordError}
         />
-        <Link className={styles.passwordLink} to='/wachtwoord-vergeten' >Wachtwoord vergeten</Link>
+        {/*<Link className={styles.passwordLink} to='/wachtwoord-vergeten' >Wachtwoord vergeten</Link>*/}
         <Button label='inloggen' raised primary onClick={e => this.handleSubmit(e, true)} />
       </Box>
     );

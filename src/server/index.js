@@ -3,6 +3,7 @@ import compression from 'compression';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import passport from 'passport';
+import path from 'path';
 import connectFlash from 'connect-flash';
 import expressSession from 'express-session';
 
@@ -45,12 +46,13 @@ const auth = new Auth();
 auth.initialize();
 
 // Setup the public directory so that we can server static assets.
-app.use(Express.static(publicPath));
+app.use(Express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
 
 // Setup api routes.
 app.use('/api', Api);
 
 app.get('*', (req, res) => res.sendFile(`${publicPath}/index.html`));
+
 
 app.listen(port, () => {
 // eslint-disable-next-line no-console
