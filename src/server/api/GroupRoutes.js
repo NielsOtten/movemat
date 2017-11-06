@@ -26,6 +26,12 @@ router.get('/:id/photos', memberOfGroup, async (req, res) => {
   return res.json(photos);
 });
 
+router.get('/:id/updatedPhotos', tokenOrLoggedIn, async (req, res) => {
+  const group = res.locals.group;
+  const updateQue = await group.getUpdateQueue(group);
+  return res.json(updateQue);
+});
+
 /**
  * Save the given photo's to the given group.
  */

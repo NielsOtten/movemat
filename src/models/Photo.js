@@ -163,6 +163,45 @@ Schema.methods.getThumbnailFromAzure = async function getThumbnailFromAzure() {
   return blobService.getUrl(groupId, this.thumbnailBlobName, sasToken, 'https://steps.blob.core.windows.net');
 };
 
+Schema.statics.getNewPhotos = function getDownloadedPhotos(group) {
+  try {
+    return this.find({ group: group._id, downloaded: false, deleted: false })
+      .sort({ timestamp: 'desc' })
+      .exec();
+  } catch(exception) {
+    return {
+      error: 'No photos were found',
+      exception,
+    };
+  }
+};
+
+Schema.statics.getDownloadedPhotos = async function getDownloadedPhotos(group) {
+  try {
+    return this.find({ group: group._id, downloaded: true, deleted: false })
+      .sort({ timestamp: 'desc' })
+      .exec();
+  } catch(exception) {
+    return {
+      error: 'No photos were found',
+      exception,
+    };
+  }
+};
+
+Schema.statics.getDeletedPhotos = async function getDownloadedPhotos(group) {
+  try {
+    return this.find({ group: group._id, deleted: true })
+      .sort({ timestamp: 'desc' })
+      .exec();
+  } catch(exception) {
+    return {
+      error: 'No photos were found',
+      exception,
+    };
+  }
+};
+
 //
 // //
 // Schema.methods.addToAzure = function addToAzure(file) {

@@ -79,6 +79,8 @@ async function tokenOrLoggedIn(req, res, next) {
     return notMemberOfGroup(res);
   }
 
+  res.locals.group = group;
+
   return next();
 }
 

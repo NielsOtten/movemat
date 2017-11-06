@@ -48,6 +48,14 @@ Schema.methods.memberOfGroup = async function memberOfGroup(user) {
   return this.allowedEmails.includes(user.email);
 };
 
+Schema.methods.getUpdateQueue = async function getUpdateQueue() {
+  const deletedPhotos = await Photo.getDeletedPhotos(this);
+  const newPhotos = await Photo.getNewPhotos(this);
+  const downloadedPhotos = await Photo.getDownloadedPhotos(this);
+
+  return { deletedPhotos, newPhotos, downloadedPhotos };
+};
+
 //
 // Schema.statics.getGroup = async function getGroup(user, id) {
 //   try {

@@ -41,7 +41,7 @@ class StepsView extends Component {
         <TableCell>{group.token}</TableCell>
         <TableCell>
           <Button href={`/admin/steps/${group._id}/edit`} label='Edit' raised primary />
-          <Button href='/' label='Verwijder' raised primary />
+          <Button href='/' label='Verwijder' raised primary onClick={(e) => { e.preventDefault(); }} />
         </TableCell>
       </TableRow>));
 

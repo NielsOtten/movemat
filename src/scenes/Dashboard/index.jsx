@@ -22,11 +22,8 @@ class Dashboard extends Component {
 
   render() {
     const groups = this.state.groups.map(group => (
-      <Link to={`/familie/${group._id}`}>
-        <ListItem
-          key={group._id}
-          caption={group.name}
-        />
+      <Link key={group._id} to={`/familie/${group._id}`} >
+        <ListItem caption={group.name} />
       </Link>
     ));
 
