@@ -92,6 +92,7 @@ Schema.methods.addToAzure = async function addToAzure(file) {
 
   // Resize image for the thumbnail.
   const thumbnail = await sharp(file.buffer)
+    .toFormat('png')
     .resize(320, 320, {
       kernel: sharp.kernel.lanczos2,
       interpolator: sharp.interpolator.nohalo,
