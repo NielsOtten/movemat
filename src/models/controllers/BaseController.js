@@ -24,11 +24,10 @@ class BaseController {
       .findOne({ _id: id })
       .then((modelInstance) => {
         Object.keys(data).forEach((key) => {
-          if(modelInstance[key] && key !== '_id') {
+          if((modelInstance[key] && key !== '_id')) {
             modelInstance[key] = data[key];
           }
         });
-
         return modelInstance.save();
       })
       .then(modelInstance => modelInstance)

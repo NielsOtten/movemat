@@ -52,7 +52,6 @@ app.use('/api', Api);
 
 app.get('*', (req, res) => res.sendFile(`${publicPath}/index.html`));
 
-
 app.listen(port, () => {
 // eslint-disable-next-line no-console
   console.log(`✅  server started on port: ${port}`);

@@ -10,7 +10,7 @@ const SALT_WORK_FACTOR = 10;
 
 /**
  * This is the user model. Every user registred to the steps tool will be registred here.
- * When you add a phototo a group this user will be referenced.
+ * When you add a photo a group this user will be referenced.
  * When you join a group this user will be added to that group.
  */
 const Schema = mongoose.Schema({
@@ -40,7 +40,6 @@ const Schema = mongoose.Schema({
   password: {
     type: String,
     required: `Wachtwoord ${errorMessages.REQUIRED_ERROR}.`,
-    select: false,
   },
   timestamp: {
     type: Date,
@@ -53,7 +52,6 @@ const Schema = mongoose.Schema({
 // eslint-disable-next-line func-names
 Schema.pre('save', function (next) {
   const user = this;
-
   // Generate hash.
 // eslint-disable-next-line consistent-return
   bcrypt.genSalt(SALT_WORK_FACTOR, (saltErr, salt) => {
@@ -71,7 +69,7 @@ Schema.pre('save', function (next) {
 });
 
 // Compare the passwords of the user
-Schema.methods.comparePassword = function comparePassword(password) {
+Schema.methods.comparePassword = async function comparePassword(password) {
   return bcrypt.compare(password, this.password);
 };
 

@@ -10,7 +10,11 @@ import SignUp from '../../scenes/SignUp';
 import Group from '../../scenes/Group';
 import Dashboard from '../../scenes/Dashboard';
 import AdminStepsView from '../../scenes/Admin/Steps/view';
+import AdminStepsEdit from '../../scenes/Admin/Steps/edit';
+import AdminStepsNew from '../../scenes/Admin/Steps/new';
 import UserStepsView from '../../scenes/Admin/User/view';
+import UserStepsEdit from '../../scenes/Admin/User/edit';
+import UserStepsNew from '../../scenes/Admin/User/new';
 import AccessDenied from '../../scenes/AccessDenied';
 import AuthenticatedRoute from '../Routes/AuthenticatedRoute';
 import AdminRoute from '../Routes/AdminRoute';
@@ -27,7 +31,11 @@ const constants = Object.freeze({
   GROUP_ROUTE: '/familie/:id',
   NO_ACCESS_ROUTE: '/geen-toegang',
   STEPS_VIEW_ROUTE: '/admin/steps',
+  STEPS_EDIT_ROUTE: '/admin/steps/:id/edit',
+  STEPS_NEW_ROUTE: '/admin/steps/:id/new',
   USER_VIEW_ROUTE: '/admin/users',
+  USER_EDIT_ROUTE: '/admin/users/:id/edit',
+  USER_NEW_ROUTE: '/admin/users/:id/new',
 });
 
 const App = appProps => (
@@ -43,8 +51,12 @@ const App = appProps => (
           <Route path={constants.SIGNUP_ROUTE} component={SignUp} {...appProps} />
           <AuthenticatedRoute path={constants.DASHBOARD_ROUTE} component={Dashboard} {...appProps} />
           <AuthenticatedRoute path={constants.GROUP_ROUTE} component={Group} {...appProps} />
-          <AdminRoute path={constants.STEPS_VIEW_ROUTE} component={AdminStepsView} {...appProps} />
-          <AdminRoute path={constants.USER_VIEW_ROUTE} component={UserStepsView} {...appProps} />
+          <AdminRoute path={constants.STEPS_VIEW_ROUTE} component={AdminStepsView} {...appProps} exact />
+          <AdminRoute path={constants.STEPS_EDIT_ROUTE} component={AdminStepsEdit} {...appProps} exact />
+          <AdminRoute path={constants.STEPS_NEW_ROUTE} component={AdminStepsNew} {...appProps} exact />
+          <AdminRoute path={constants.USER_VIEW_ROUTE} component={UserStepsView} {...appProps} exact />
+          <AdminRoute path={constants.USER_EDIT_ROUTE} component={UserStepsEdit} {...appProps} exact />
+          <AdminRoute path={constants.USER_NEW_ROUTE} component={UserStepsNew} {...appProps} exact />
           <Route path={constants.NO_ACCESS_ROUTE} component={AccessDenied} {...appProps} />
           <Route component={NotFound} {...appProps} />
         </Switch>

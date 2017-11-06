@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import fetch from 'fetch-everywhere';
 import { Table, TableHead, TableRow, TableCell } from 'react-toolbox/lib/table';
-import { Button } from 'react-toolbox';
+import Button from '../../../../components/common/LinkButtons';
 
 class StepsView extends Component {
   state = {
@@ -38,8 +38,8 @@ class StepsView extends Component {
         <TableCell>{group.name}</TableCell>
         <TableCell>{group.token}</TableCell>
         <TableCell>
-          <Button label='Edit' raised primary />
-          <Button label='Verwijder' raised primary />
+          <Button href={`/admin/steps/${group._id}/edit`} label='Edit' raised primary />
+          <Button href='/' label='Verwijder' raised primary />
         </TableCell>
       </TableRow>));
 

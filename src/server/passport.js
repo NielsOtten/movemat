@@ -31,11 +31,12 @@ class Auth {
     });
   }
 
-  static loginAuthenticate(req, email, password, done) {
-    User.findOne({ $or: [{ email }, { username: email }] }).exec()
-      .then((user) => {
+  static async loginAuthenticate(req, email, password, done) {
+    await User.findOne({ $or: [{ email }, { username: email }] }).exec()
+      .then(async (user) => {
         if(!user) { return done(null, false, req.flash('errors', errorMongoosify(errorMessages.PASSWORD_NOT_VALID_ERROR))); }
-        if(!user.comparePassword(password)) { return done(null, false, req.flash('errors', errorMongoosify(errorMessages.PASSWORD_NOT_VALID_ERROR))); }
+        const comparePasswords = await user.comparePassword(password);
+        if(!comparePasswords) { return done(null, false, req.flash('errors', errorMongoosify(errorMessages.PASSWORD_NOT_VALID_ERROR))); }
         return done(null, user);
       })
       .catch(err => done(err));
