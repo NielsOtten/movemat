@@ -17,7 +17,7 @@ class Header extends Component {
     return (
       <div>
         {this.state.logout && <Redirect to='/' />}
-        <AppBar leftIcon='menu' onLeftIconClick={() => HeaderStore.toggleDrawerActive()}>
+        <AppBar>
           <Navigation type='horizontal' className={style.navigation}>
             {/* TODO: Make own buttons for routing. */}
             {!AuthStore.loggedIn && <Button href='/login' label='Login' className={style.raisedButton} raised /> }
@@ -25,11 +25,11 @@ class Header extends Component {
             {AuthStore.loggedIn && <Button href='/' label='Log uit' className={style.raisedButton} onClick={(e) => { e.preventDefault(); this.setState({ logout: true }); AuthStore.logOut(); }} raised /> }
           </Navigation>
         </AppBar>
-        <NavDrawer
-          active={HeaderStore.drawerActive}
-          pinned={HeaderStore.drawerPinned}
-          onOverlayClick={() => HeaderStore.toggleDrawerActive()}
-        />
+        {/*<NavDrawer*/}
+          {/*active={HeaderStore.drawerActive}*/}
+          {/*pinned={HeaderStore.drawerPinned}*/}
+          {/*onOverlayClick={() => HeaderStore.toggleDrawerActive()}*/}
+        {/*/>*/}
       </div>
     );
   }
