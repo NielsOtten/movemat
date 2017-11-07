@@ -4,12 +4,14 @@
     "development": {
       "plugins": [
         "transform-decorators-legacy",
+        "transform-decorators-legacy",
         "transform-object-rest-spread",
         "syntax-object-rest-spread"
       ]
     },
     "production": {
       "plugins": [
+        "transform-decorators-legacy",
         "transform-object-rest-spread",
         "syntax-object-rest-spread",
         "transform-react-remove-prop-types"
