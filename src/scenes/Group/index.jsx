@@ -63,7 +63,7 @@ class Group extends Component {
           active={this.state.deletedPhoto}
           label='Foto verwijderd'
           timeout={2000}
-          onTimeout={() => this.setState({ photoDeleted: false })}
+          onTimeout={() => this.setState({ deletedPhoto: false })}
         />
         <PhotoUpload groupId={this.props.computedMatch.params.id} getPhotos={this.getPhotos} />
         <div className={styles.uploadText}>

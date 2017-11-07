@@ -111,7 +111,6 @@ class PhotoUpload extends Component {
   }
 
   async uploadFiles(files) {
-    console.log(files);
     try {
       const response = await postPhotos(files, this.props.groupId);
       // TODO: Add validation for response
