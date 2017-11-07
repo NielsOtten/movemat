@@ -66,6 +66,9 @@ class Group extends Component {
           onTimeout={() => this.setState({ photoDeleted: false })}
         />
         <PhotoUpload groupId={this.props.computedMatch.params.id} getPhotos={this.getPhotos} />
+        <div className={styles.uploadText}>
+          Sleep de foto's op de website om ze naar de steps te uploaden.
+        </div>
         <div className={styles.photos}>
           {photos.length <= 0 && <p>Er zijn nog geen foto's gevonden</p>}
           {photos}

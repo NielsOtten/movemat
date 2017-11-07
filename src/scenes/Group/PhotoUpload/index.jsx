@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ProgressBar from 'react-toolbox/lib/progress_bar';
-import { Snackbar } from 'react-toolbox';
+import { Snackbar, Button } from 'react-toolbox';
 import { postPhotos } from '../../../services/api/Group/index';
 import styles from './styles.scss';
 
@@ -18,6 +18,7 @@ class PhotoUpload extends Component {
     this.dragTargets = [];
 
     this.onDrop = this.onDrop.bind(this);
+    this.uploadFiles = this.uploadFiles.bind(this);
   }
 
   allowedFileTypes = [
@@ -102,17 +103,22 @@ class PhotoUpload extends Component {
       this.setState({ uploading: true });
 
       if(allowedFiles.length > 0) {
-        try {
-          const response = await postPhotos(allowedFiles, this.props.groupId);
-          // TODO: Add validation for response
-          this.props.getPhotos(this.props.groupId);
-          this.setState({ uploaded: true });
-        } catch(exception) {
-          console.log(exception);
-        }
+        await this.uploadFiles(files);
       }
 
       this.setState({ drag: false, uploading: false, draggedFiles: [] });
+    }
+  }
+
+  async uploadFiles(files) {
+    console.log(files);
+    try {
+      const response = await postPhotos(files, this.props.groupId);
+      // TODO: Add validation for response
+      this.props.getPhotos(this.props.groupId);
+      this.setState({ uploaded: true });
+    } catch(exception) {
+      console.log(exception);
     }
   }
 
@@ -122,6 +128,21 @@ class PhotoUpload extends Component {
 
   handleSnackbar = () => {
     this.setState({ uploaded: false });
+  };
+
+  handleFileUpload = (e) => {
+    e.preventDefault();
+
+    if(!this.state.uploading) {
+      this.setState({ uploading: true });
+
+      const fileList = e.target.files;
+      const files = [].slice.call(fileList);
+      this.uploadFiles(files)
+        .then(() => {
+          this.setState({ uploading: false });
+        });
+    }
   };
 
   render() {
@@ -139,6 +160,8 @@ class PhotoUpload extends Component {
           onTimeout={this.handleSnackbar}
           timeout={2000}
         />
+        <input ref={fileUpload => this.fileUpload = fileUpload} type='file' multiple style={{ display: 'none' }} onChange={this.handleFileUpload} />
+        <Button className={styles.addButton} icon='add' floating accent onClick={() => { this.fileUpload.click(); }} />
       </div>
     );
   }
