@@ -50,8 +50,9 @@ const Schema = mongoose.Schema({
 // No arrow function, because pre save can't handle it.
 // http://stackoverflow.com/questions/37365038/this-is-undefined-in-a-mongoose-pre-save-hook
 // eslint-disable-next-line func-names
-Schema.pre('save', function (next) {
+Schema.pre('save', function(next) {
   const user = this;
+  if(!user.isModified('password')) return next();
   // Generate hash.
 // eslint-disable-next-line consistent-return
   bcrypt.genSalt(SALT_WORK_FACTOR, (saltErr, salt) => {

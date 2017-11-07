@@ -3,6 +3,7 @@ import Input from 'react-toolbox/lib/input';
 import { Button } from 'react-toolbox';
 import { Redirect } from 'react-router-dom';
 import fetch from 'fetch-everywhere';
+import Dropdown from 'react-toolbox/lib/dropdown';
 import { constants as routerLinks } from '../../../../components/App/index';
 import Box from '../../../../components/common/Box';
 
@@ -11,9 +12,11 @@ class UserEdit extends Component {
     username: '',
     email: '',
     password: '',
+    role: '',
     usernameError: '',
     emailError: '',
     passwordError: '',
+    roleError: '',
     redirect: false,
   };
 
@@ -28,17 +31,23 @@ class UserEdit extends Component {
   async handleSubmit(e, clicked = false) {
     if(clicked || e.key === 'Enter') {
       try {
+        const json = {
+          username: this.state.username,
+          email: this.state.email,
+          role: this.state.role,
+        };
+
+        if(this.state.password.length > 0) {
+          json.password = this.state.password;
+        }
+
         const response = await fetch('/api/admin/user', {
           method: 'POST',
           headers: {
             'Content-type': 'application/json',
           },
           credentials: 'include',
-          body: JSON.stringify({
-            username: this.state.username,
-            password: this.state.password,
-            email: this.state.email,
-          }),
+          body: JSON.stringify(json),
         });
         if(response.status === 200) {
           this.setState({ redirect: true });
@@ -82,6 +91,14 @@ class UserEdit extends Component {
           onKeyPress={this.handleSubmit}
           onChange={password => this.setState({ password })}
           error={this.state.nameError}
+        />
+        <Dropdown
+          source={[
+            { value: 'admin', label: 'Admin' },
+            { value: 'anonymous_user', label: 'Normale gebruiker' },
+          ]}
+          onChange={role => this.setState({ role })}
+          value={this.state.role}
         />
         <Button label='Add' raised primary onClick={e => this.handleSubmit(e, true)} />
       </Box>
