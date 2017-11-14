@@ -60,8 +60,14 @@ router.post('/:id/signup/:token', async (req, res, next) => {
         const group = await Group.findOne({ _id: id, token });
         if(group && group !== 'undefined') {
           if(!group.allowedEmails.includes(user.email)) {
+            console.log(user.email);
+            console.log(group.allowedEmails);
             group.allowedEmails.push(user.email);
-            await group.save();
+            try {
+              await group.save();
+            } catch(exception) {
+              console.log(exception);
+            }
             return res.json({
               success: true,
             });
