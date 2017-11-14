@@ -10,8 +10,7 @@ import expressSession from 'express-session';
 import Auth from './passport';
 import Api from './api';
 
-const publicPath = __dirname;
-console.log(publicPath);
+const publicPath = path.join(__dirname, '../public');
 const app = Express();
 
 const port = parseInt(process.env.PORT || 3000, 10);
@@ -44,30 +43,6 @@ app.use(expressSession({
 app.use(connectFlash());
 app.use(passport.initialize());
 app.use(passport.session());
-
-function logErrors(err, req, res, next) {
-  console.error(err.stack);
-  next(err);
-}
-
-function errorHandler(err, req, res, next) {
-  res.status(500);
-  res.render('error', { error: err });
-}
-
-function clientErrorHandler(err, req, res, next) {
-  if(req.xhr) {
-    console.log(err);
-    res.status(500).send({ error: 'Something failed!' });
-  } else {
-    next(err);
-  }
-}
-
-app.use(logErrors);
-app.use(clientErrorHandler);
-app.use(errorHandler);
-
 const auth = new Auth();
 auth.initialize();
 
@@ -77,10 +52,7 @@ app.use(Express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
 // Setup api routes.
 app.use('/api', Api);
 
-app.get('*', (req, res) => {
-  console.log('getting base', publicPath);
-  return res.sendFile(`${publicPath}/index.html`);
-});
+app.get('*', (req, res) => res.sendFile(`${publicPath}/index.html`));
 
 app.listen(port, () => {
 // eslint-disable-next-line no-console
