@@ -24,15 +24,9 @@ class Header extends Component {
           </Link>
           <Navigation type='horizontal' className={style.navigation}>
             {!AuthStore.loggedIn && <Button href='/login' label='Login' className={style.raisedButton} raised /> }
-            {!AuthStore.loggedIn && <Button href='/registreer' label='Registreren' className={style.flatButton} flat />}
             {AuthStore.loggedIn && <Button href='/' label='Log uit' className={style.raisedButton} onClick={(e) => { e.preventDefault(); this.setState({ logout: true }); AuthStore.logOut(); }} raised /> }
           </Navigation>
         </AppBar>
-        {/*<NavDrawer*/}
-          {/*active={HeaderStore.drawerActive}*/}
-          {/*pinned={HeaderStore.drawerPinned}*/}
-          {/*onOverlayClick={() => HeaderStore.toggleDrawerActive()}*/}
-        {/*/>*/}
       </div>
     );
   }
