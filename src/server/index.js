@@ -10,7 +10,8 @@ import expressSession from 'express-session';
 import Auth from './passport';
 import Api from './api';
 
-const publicPath = path.join(__dirname, '../public');
+const env = process.env.NODE_ENV || 'development';
+const publicPath = env === 'development' ? __dirname : path.join(__dirname, '../build/public');
 const app = Express();
 
 const port = parseInt(process.env.PORT || 3000, 10);

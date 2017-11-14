@@ -1,9 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 import express from 'express';
 import multer from 'multer';
+import passport from 'passport';
 import Group from '../../models/Group';
 import Photo from '../../models/Photo';
 import { isLoggedIn, memberOfGroup, tokenOrLoggedIn } from '../middleware';
+import User from '../../models/User';
 
 const router = express.Router();
 const storage = multer.memoryStorage();
@@ -30,6 +32,86 @@ router.get('/:id/updatedPhotos', tokenOrLoggedIn, async (req, res) => {
   const group = res.locals.group;
   const updateQue = await group.getUpdateQueue(group);
   return res.json(updateQue);
+});
+
+/**
+ * Users signup here.
+ */
+router.post('/:id/signup/:token', async (req, res, next) => {
+  const { id, token } = req.params;
+  const { login } = req.body;
+
+  // Handle it as a user who tries to login,
+  // Else create a user.
+  if(login) {
+    passport.authenticate('local-login', (err, user, info) => {
+      if(err) { return next(err); }
+      if(!user) {
+        return res.json({ success: false,
+          messages: {
+            password: 'Wachtwoord komt niet overeen met gebruikersnaam',
+            name: 'Gebruikersnaam komt niet overeen met wachtwoord',
+          },
+        });
+      }
+      req.login(user, async (loginErr) => {
+        if(loginErr) { return next(loginErr); }
+        // Add user to group.
+        const group = await Group.findOne({ _id: id, token });
+        if(group && group !== 'undefined') {
+          if(!group.allowedEmails.includes(user.email)) {
+            group.allowedEmails.push(user.email);
+            await group.save();
+            return res.json({
+              success: true,
+            });
+          }
+          return res.json({
+            success: true,
+          });
+        }
+      });
+    })(req, res, next);
+  } else {
+    // Sign up
+    const { email, password, username } = req.body;
+    const values = { email, password, username };
+    const obj = { success: false, errors: {} };
+    Object.keys(values).forEach((key) => {
+      if(values[key] === 'undefined' || !values[key]) {
+        obj.errors[`${key}Error`] = 'Mag niet leeg zijn';
+      }
+    });
+
+    if(Object.keys(obj.errors).length > 0) {
+      return res.json(obj);
+    }
+
+    let user = null;
+    try {
+      user = await new User(values);
+      await user.save();
+    } catch({ errors }) {
+      const newErrors = {};
+      Object.keys(errors).forEach(error => newErrors[`${error}Error`] = errors[error].message);
+      obj.errors = newErrors;
+      return res.json(obj);
+    }
+
+    const group = await Group.findOne({ _id: id, token });
+    if(group && group !== 'undefined') {
+      if(!group.allowedEmails.includes(user.email)) {
+        group.allowedEmails.push(user.email);
+        await group.save();
+        return res.json({
+          success: true,
+        });
+      }
+      return res.json({
+        success: true,
+      });
+    }
+  }
 });
 
 /**

@@ -6,7 +6,7 @@ import Header from './Header';
 import Login from '../../scenes/Login';
 import PasswordRecovery from '../../scenes/PasswordRecovery';
 import NotFound from '../../scenes/NotFound';
-import SignUp from '../../scenes/SignUp';
+import Register from '../../scenes/Group/Register';
 import Group from '../../scenes/Group';
 import Dashboard from '../../scenes/Dashboard';
 import AdminStepsView from '../../scenes/Admin/Steps/view';
@@ -26,7 +26,7 @@ const constants = Object.freeze({
   HOME_ROUTE: '/',
   PASSWORD_RECOVERY_ROUTE: '/wachtwoord-vergeten',
   PASSWORD_RECOVERY_TOKEN_ROUTE: '/reset-wachtwoord/:token',
-  SIGNUP_ROUTE: '/registreer',
+  SIGNUP_ROUTE: '/familie/:id/registreer/:token',
   DASHBOARD_ROUTE: '/dashboard',
   GROUP_ROUTE: '/familie/:id',
   NO_ACCESS_ROUTE: '/geen-toegang',
@@ -48,7 +48,7 @@ const App = appProps => (
           <Route path={constants.LOGIN_ROUTE} component={Login} {...appProps} />
           <Route path={constants.PASSWORD_RECOVERY_ROUTE} component={PasswordRecovery} />
           <Route path={constants.PASSWORD_RECOVERY_TOKEN_ROUTE} component={Login} />
-          <Route path={constants.SIGNUP_ROUTE} component={SignUp} {...appProps} />
+          <Route path={constants.SIGNUP_ROUTE} component={Register} {...appProps} />
           <AuthenticatedRoute path={constants.DASHBOARD_ROUTE} component={Dashboard} {...appProps} />
           <AuthenticatedRoute path={constants.GROUP_ROUTE} component={Group} {...appProps} />
           <AdminRoute path={constants.STEPS_VIEW_ROUTE} component={AdminStepsView} {...appProps} exact />
