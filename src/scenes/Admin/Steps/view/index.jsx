@@ -47,7 +47,7 @@ class StepsView extends Component {
 
     return (
       <div>
-        <Button className={AdminStyles.addButton} href={LinkRoutes.STEPS_NEW_ROUTE} icon='add' floating />
+        <Button className={AdminStyles.addButton} href={LinkRoutes.STEPS_NEW_ROUTE} icon='add' floating accent />
         <Table>
           <TableHead>
             <TableCell>Id</TableCell>
