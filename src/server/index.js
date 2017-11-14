@@ -78,7 +78,7 @@ app.use(Express.static(path.join(process.cwd(), KYT.PUBLIC_DIR)));
 app.use('/api', Api);
 
 app.get('*', (req, res) => {
-  console.log('getting base');
+  console.log('getting base', publicPath);
   return res.sendFile(`${publicPath}/index.html`);
 });
 
