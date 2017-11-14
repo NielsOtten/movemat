@@ -11,7 +11,7 @@ import Auth from './passport';
 import Api from './api';
 
 const env = process.env.NODE_ENV || 'development';
-const publicPath = env === 'development' ? __dirname : path.join(__dirname, '../build/public');
+const publicPath = env === 'development' ? __dirname : path.join(__dirname, '../public');
 const app = Express();
 
 const port = parseInt(process.env.PORT || 3000, 10);
