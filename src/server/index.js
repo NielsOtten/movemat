@@ -2,6 +2,7 @@ import Express from 'express';
 import compression from 'compression';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import forceSsl from 'force-ssl-heroku';
 import passport from 'passport';
 import path from 'path';
 import connectFlash from 'connect-flash';
@@ -34,6 +35,8 @@ app.use(bodyParser.urlencoded({
   extended: true,
 }));
 app.use(bodyParser.json());
+
+app.use(forceSsl);
 
 // Setup passport + session
 app.use(expressSession({
